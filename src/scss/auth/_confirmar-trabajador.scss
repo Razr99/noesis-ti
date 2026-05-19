@@ -1,0 +1,31 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.encabezado-confirmar-usuario {
+    text-align: center;
+    padding-top: 10rem;
+
+    h2 {
+        font-size: 6rem;
+        color: v.$gris-claro;
+    }
+
+    p {
+        font-size: 1.8rem;
+        color: v.$blanco;
+    }
+}
+
+.confirmar-usuario {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10rem;
+
+    @include m.tablet {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

@@ -1,0 +1,88 @@
+@use 'sass:color';
+@use 'base/variables' as v;
+
+/** Media Queries **/
+@mixin telefono {
+    @media (min-width: v.$telefono) {
+        @content;
+    }
+}
+@mixin tablet {
+    @media (min-width: v.$tablet) {
+        @content;
+    }
+}
+@mixin desktop {
+    @media (min-width: v.$desktop) {
+        @content;
+    }
+}
+
+
+@mixin botonLargo($bgColor, $colorTexto) {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    background-color: $bgColor;
+    color: $colorTexto;
+    font-size: 1.6rem;
+    font-weight: normal;
+    border: none;
+    border-radius: .5rem;
+    transition-property: background-color;
+    transition-duration: .3s;
+    text-align: center;
+
+    @include hoverBackground($bgColor);
+}
+
+@mixin botonCorto($bgColor, $colorTexto) {
+    display: inline;
+    width: 100%;
+    padding: 1.4rem 1rem;
+    box-sizing: border-box;
+    background-color: $bgColor;
+    color: $colorTexto;
+    font-size: 1.4rem;
+    font-weight: normal;
+    border: none;
+    border-radius: .7rem;
+    transition-property: background-color;
+    transition-duration: .3s;
+    text-align: center;
+
+    @include hoverBackground($bgColor);
+}
+
+@mixin hoverBackground($bgColor) {
+    &:hover {
+        background-color: color.mix(#000, $bgColor, 20%);
+        cursor: pointer;
+    }
+}
+
+@mixin hoverTexto($bgColor) {
+    &:hover {
+        color: color.mix(#000, $bgColor, 20%);
+        cursor: pointer;
+    }
+}
+
+@mixin grid($columnas, $espaciado ) {
+    display: grid;
+    gap: $espaciado;
+    grid-template-columns: repeat($columnas, 1fr);
+}
+
+@mixin textoDegradado($color) {
+    background: linear-gradient(to right, $color 0%, lighten($color, 30%) 100%);
+    color: transparent;
+    background-clip: text;
+    text-align: center;
+    font-size: 7rem;
+
+    @include tablet {
+        font-size: 10rem;
+    }
+}

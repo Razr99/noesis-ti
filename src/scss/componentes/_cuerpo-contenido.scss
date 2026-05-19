@@ -1,0 +1,188 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.cuerpo-contenedor {
+    background-color: v.$fondo-dashboard;
+    height: 100%;
+    padding: 2rem;
+    margin-left: 24rem;
+    overflow-x: hidden;
+
+    .contenedor {
+        background-color: v.$grisProfundo;
+        margin: 4rem 2rem;
+        border: 1px solid v.$grisOscuro;
+        border-radius: 1rem;
+        max-width: 100%;
+        overflow: hidden;
+
+        .encabezado-tabla {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .contenedor-buscador-agregar {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2rem 0 1rem;
+            .contenedor-buscador {
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 45rem;
+                margin-bottom: 2rem;
+            }
+
+            .icono-buscador {
+                position: absolute;
+                left: 3rem;
+                color: #64748b;
+                pointer-events: none;
+            }
+
+            .input-buscador {
+                width: 100%;
+                margin-left: 2rem;
+                padding: 1rem 1rem 1rem 5rem !important;
+                background-color: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 0.8rem;
+                color: #f8fafc;
+                outline: none;
+            }
+
+            .input-buscador:focus {
+                border-color: #3b82f6;
+            }
+
+            .tabla tbody tr {
+                display: none;
+            }
+        }
+
+        .input-contenedor {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .calendario {
+                padding-left: 40px !important;
+                width: 100%;
+            }
+
+            .icono-calendario {
+                position: absolute;
+                left: 12px;
+                color: v.$gris-claro;
+                pointer-events: none;
+                z-index: 5;
+            }
+        }
+
+        h4 {
+            margin: 0;
+            padding: 1rem 0 0 0;
+            font-size: 2rem;
+        }
+
+        p {
+            margin: 0;
+            padding: 0.5rem 0 3rem 0;
+            font-size: 1.4rem;
+        }
+
+        .contenedor-tabla {
+            width: 100%;
+            overflow-x: auto;
+            min-height: 55vh;
+            margin-top: 2rem;
+            border-top: 1px solid v.$grisOscuro;
+
+            .tabla {
+                font-size: 1.4rem;
+                font-weight: normal;
+                color: v.$gris-claro;
+                min-width: 1300px;
+                border-collapse: collapse;
+
+                thead {
+                    tr {
+                        border-bottom: 1px solid v.$grisOscuro;
+                        th {
+                            padding: 1.5rem 0.5rem;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+
+                tbody {
+                    tr {
+                        border-bottom: 1px solid v.$grisOscuro;
+
+                        &:last-child {
+                            border-bottom: none;
+                        }
+
+                        td {
+                            text-align: center;
+                            padding: 2rem 0.5rem;
+                            color: v.$gris;
+                            white-space: nowrap;
+
+                            .fa-ellipsis-vertical {
+                                cursor: pointer;
+                                color: v.$gris-claro;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* --- Ajustes del Empty State --- */
+            .empty-state {
+                display: none !important;
+                padding: 6rem 3rem;
+                background-color: #1e293b;
+                border-radius: 1rem;
+                border: 2px dashed #334155;
+                margin: 2rem;
+                
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .empty-state__icono {
+                font-size: 8rem;
+                color: #3b82f6;
+                margin-bottom: 2rem;
+                
+                display: block; 
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .empty-state__texto {
+                color: #f8fafc;
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-bottom: 0.8rem;
+                line-height: 1.2;
+            }
+
+            .empty-state__subtexto {
+                color: #94a3b8;
+                font-size: 1.6rem;
+                max-width: 400px;
+            }
+        }
+
+        &:last-child {
+            margin-top: 10rem;
+        }
+    }
+}

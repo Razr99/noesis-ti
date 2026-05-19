@@ -1,0 +1,94 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.formulario-block {
+    width: 400px;
+    background: white;
+    padding: 5rem 2.8rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+    
+    h2 {
+        font-size: 3rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+    
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+        
+    .boton {
+        @include m.botonLargo(v.$color-principal, v.$blanco);
+    }
+}
+
+.formulario-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 2rem 3rem;
+    
+    
+    .campo {
+        flex: 0 0 calc(50% - 1rem);
+        display: flex;
+        flex-direction: column;
+        color: v.$gris-claro;
+
+        label {
+            margin-bottom: 1rem;
+        }
+
+        input,select, textarea {
+            color: v.$gris-claro;
+            background-color: v.$fondo-dashboard;
+            font-size: 1.4rem;
+            padding: 1.2rem 1rem;
+            box-shadow: none;
+            outline: none;
+            border-radius: 1rem;
+            border: 2px solid v.$grisOscuro;
+        }
+
+        select,
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        .input-contenedor {
+            position: relative;
+            display: flex;
+            align-items: center;
+
+            .calendario {
+                padding-left: 40px !important;
+                width: 100%;
+            }
+
+            .icono-calendario {
+                position: absolute;
+                left: 12px;
+                color: v.$gris-claro;
+                pointer-events: none;
+                z-index: 5;
+            }
+        }
+    }
+
+    .campo-boton {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start; 
+
+        input {
+            margin-top: auto;
+        }
+    }
+}

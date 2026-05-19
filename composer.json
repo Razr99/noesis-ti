@@ -1,0 +1,31 @@
+{
+    "name": "raul2/noesis",
+    "description": "Proyecto de la clase de Ingenieria de Software",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "MVC\\" : "./",
+            "Controllers\\" : "./controllers",
+            "Model\\" : "./models",
+            "Classes\\" : "./classes"
+        }
+    },
+    "authors": [
+        {
+            "name": "Antonio Raúl Martínez Flores"
+        },
+        {
+            "name": "Deisy Guadalupe Flores Pérez"
+        },
+        {
+            "name": "Jesus Alfonso Galván Cardona"
+        },
+        {
+            "name": "Karina Alejandra Segundo de la Cruz"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^7.0",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

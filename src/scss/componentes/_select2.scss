@@ -1,0 +1,64 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.select2-container--default .select2-selection--single {
+    background-color: v.$fondo-dashboard;
+    border: 2px solid v.$grisOscuro;
+    border-radius: 1rem;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    color: v.$gris-claro;
+    font-size: 1.4rem;
+    padding: 1.2rem 1rem;
+    box-shadow: none;
+    outline: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #f8fafc;
+    padding-left: 15px;
+}
+
+.select2-dropdown {
+    background-color: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #334155;
+}
+
+.select2-search__field {
+    background-color: #0f172a !important;
+    color: white !important;
+    border: 1px solid #334155 !important;
+}
+
+/* --- Ajustes Principales de Alineación para Select2 --- */
+
+/* 1. Centrar el texto seleccionado verticalmente */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-left: 15px;
+    padding-top: 0;
+    margin-top: 0;
+    color: v.$gris-claro;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 10px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__clear {
+    margin-right: 10px;
+    font-weight: bold;
+    color: #ef4444;
+    float: none;
+    order: -1;
+    padding-top: 2px;
+}

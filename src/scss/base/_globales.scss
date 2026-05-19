@@ -1,0 +1,108 @@
+@use 'variables' as v;
+@use 'mixins' as m;
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+body {
+    font-family: v.$fuente_textos;
+    background: v.$fondo-dashboard;
+    font-size: 1.6rem;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color: v.$menu-dashboard-active v.$fondo-dashboard;
+
+    &::-webkit-scrollbar {
+        height: 8px; // grosor del scroll horizontal
+    }
+
+    &::-webkit-scrollbar-track {
+        background: v.$fondo-dashboard; // fondo del track
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: v.$gris-claro; // color de la barra
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: v.$menu-dashboard-active; // color de la barra al pasar el mouse
+    }
+}
+.contenedor {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.contenedor-sm {
+    max-width: 70rem;
+    margin: 0 auto;
+}
+a {
+    text-decoration: none;
+}
+img {
+    max-width: 100%;
+}
+
+.tabla-bandera-verde {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    background-color: v.$verde-activo;
+    color: v.$verde-activo-texto;
+}
+
+.tabla-bandera-roja {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    background-color: v.$rojo-inactivo;
+    color: v.$rojo-inactivo-texto;
+}
+
+.tabla-bandera-amarilla {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    background: v.$amarillo-suave;
+    color: v.$amarillo-intenso;
+}
+
+.tabla-bandera-azul {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    background-color: v.$indigo;
+    color: v.$blanco;
+}
+
+.tabla-bandera-gris {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    background-color: v.$grisOscuro;
+    color: v.$gris-claro;
+}
+
+
+//BOTONES CORTOS
+
+.btn-azul {
+    button {
+        @include m.botonCorto(v.$azul, v.$blanco);
+    }
+
+    input {
+        @include m.botonCorto(v.$azul, v.$blanco);
+    }
+}
+
+
+//CAMPOS DE FORMS DESHABILITADOS 
+input[readonly], input:disabled {
+    cursor: not-allowed;
+}

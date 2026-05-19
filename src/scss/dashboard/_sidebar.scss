@@ -1,0 +1,43 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.sidebar {
+    position: fixed;
+    width: 24rem;
+    height: 100vh;
+    background-color: v.$fondo-dashboard;
+    padding: 2rem;
+    border-right: 1px solid v.$grisOscuro;
+
+    h2 {
+        margin: 0;
+        text-align: center;
+    }
+
+    .sidebar-nav {
+        margin-top: 5rem;
+
+        a {
+            display: block;
+            color: v.$blanco;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem 0.7rem;
+            transition-property: background-color;
+            transition-duration: 300ms;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1.2rem;
+
+            &:hover {
+                background-color: v.$grisOscuro;
+                border-radius: 0.6rem;
+            }
+
+            &.activo {
+                background-color: v.$menu-dashboard-active;
+                color: v.$menu-dashboard-active-text;
+                border-radius: 0.5rem;
+            }
+        }
+    }
+}

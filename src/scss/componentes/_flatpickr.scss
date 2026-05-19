@@ -1,0 +1,15 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+/* Cambia el cursor para el input visual que crea Flatpickr */
+.flatpickr-mobile, 
+.flatpickr-input, 
+.flatpickr-input + input {
+    cursor: pointer !important;
+}
+
+/* En caso de que el contenedor también tenga el cursor bloqueado */
+.formulario__campo.calendario[readonly] {
+    cursor: pointer !important;
+    background-color: transparent;
+}
