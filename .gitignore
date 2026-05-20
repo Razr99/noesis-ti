@@ -23,4 +23,4 @@ Thumbs.db
 
 # Builds (si usas)
 dist/
-build/
+#build/

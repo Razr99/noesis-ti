@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Empresa;
 use Model\Equipo;
 use MVC\Router;
 use Model\Ticket;
@@ -13,10 +14,39 @@ class TicketController {
         isAuth();
         $alertas = [];
         rol(['Administrador','Cliente','Técnico']);
+        $rol = $_SESSION['rol'] ?? '';
+        $id_empresa = $_SESSION['id_empresa'] ?? null;
 
-        $tickets = Ticket::all();
+        if ($rol === 'Administrador' || $rol === 'Técnico') {
+            $tickets = Ticket::all() ?? [];
+        } else {
+            $tickets = Ticket::where('id_empresa',$id_empresa) ?? [];
+
+            if (!is_array($tickets)) {
+                $tickets = $tickets ? [$tickets] : [];
+            }
+        }
+
+        $categorias = TicketCategoria::all();
+        $empresas = Empresa::all();
+
+        $mapaCategorias = [];
+        foreach($categorias as $cat) {
+            $mapaCategorias[$cat->id] = $cat->categoria_ticket;
+        }
+
+        $mapaEmpresas = [];
+        foreach($empresas as $emp) {
+            $mapaEmpresas[$emp->id] = $emp->nombre_fiscal;
+        }
+
+        foreach($tickets as $ticket) {
+            $ticket->nombre_categoria = $mapaCategorias[$ticket->id_categoria] ?? 'Sin Categoría';
+            $ticket->nombre_empresa = $mapaEmpresas[$ticket->id_empresa] ?? 'Sin Empresa';
+        }
 
         $router->render('dashboard/tickets/tickets', [
+            'titulo' => 'Tickets',
             'tickets' => $tickets,
             'alertas' => $alertas
         ]);

@@ -82,6 +82,10 @@ class Trabajador extends ActiveRecord {
 
         if(!$this->telefono) {
             self::$alertas['error'][] = 'El teléfono es obligatorio';
+        } else {
+            if(!preg_match('/^[2-9][0-9]{9}$/', $this->telefono)) {
+                self::$alertas['error'][] = 'El teléfono debe ser un número válido de 10 dígitos (sin incluir 0 al inicio)';
+            }
         }
 
         return self::$alertas;
@@ -123,9 +127,8 @@ class Trabajador extends ActiveRecord {
         if(!$this->telefono) {
             self::$alertas['error'][] = 'El teléfono es obligatorio';
         } else {
-            // valida que solo tenga números y sea de 10 dígitos (México)
-            if(!preg_match('/^[0-9]{10}$/', $this->telefono)) {
-                self::$alertas['error'][] = 'El teléfono debe tener 10 dígitos';
+            if(!preg_match('/^[2-9][0-9]{9}$/', $this->telefono)) {
+                self::$alertas['error'][] = 'El teléfono debe ser un número válido de 10 dígitos (sin incluir 0 al inicio)';
             }
         }
 
@@ -216,8 +219,8 @@ class Trabajador extends ActiveRecord {
         if(!$this->telefono) {
             self::$alertas['error'][] = 'El teléfono es obligatorio';
         } else {
-            if(!preg_match('/^[0-9]{10}$/', $this->telefono)) {
-                self::$alertas['error'][] = 'El teléfono debe tener 10 dígitos';
+            if(!preg_match('/^[2-9][0-9]{9}$/', $this->telefono)) {
+                self::$alertas['error'][] = 'El teléfono debe ser un número válido de 10 dígitos (sin incluir 0 al inicio)';
             }
         }
 

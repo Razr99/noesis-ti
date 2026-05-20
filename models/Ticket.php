@@ -36,6 +36,9 @@ class Ticket extends ActiveRecord {
     public $fecha_inicio;
     public $fecha_actualizacion;
     public $fecha_final;
+    //VARIABLES ADICIONALES
+    public $nombre_categoria;
+    public $nombre_empresa;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;

@@ -45,7 +45,6 @@
                         <th>ID</th>
                         <th>Número de Ticket</th>
                         <th>Categoría</th>
-                        <th>Título</th>
                         <th>Empresa</th>
                         <th>Prioridad</th>
                         <th>Estatus</th>
@@ -60,9 +59,8 @@
                         <tr>
                             <td><?php echo $ticket->id; ?></td>
                             <td><?php echo $ticket->numero_ticket; ?></td>
-                            <td><?php echo $ticket->categoria; ?></td>
-                            <td><?php echo $ticket->titulo; ?></td>
-                            <td><?php echo $ticket->id_empresa; ?></td>
+                            <td><?php echo $ticket->nombre_categoria; ?></td>
+                            <td><?php echo $ticket->nombre_empresa; ?></td>
                             <td>
                                 <?php 
                                     $clase = '';
@@ -77,7 +75,7 @@
                                             break;
 
                                         case 'Alta':
-                                            $clase = 'tabla-bandera-amarila';
+                                            $clase = 'tabla-bandera-amarilla';
                                             break;
                                         
                                         case 'Crítica':
@@ -123,17 +121,17 @@
                                     <?php echo $ticket->estatus; ?>
                                 </span>
                             </td>
+                            <td><?php echo $ticket->id_empleado ?? 'Sin Técnico asignado'; ?></td>
                             <td><?php echo $ticket->fecha_inicio; ?></td>
-                            <td><?php echo $ticket->fecha_final; ?></td>
+                            <td><?php echo $ticket->fecha_final ?? 'Aún no se ha finalizado el Ticket'; ?></td>
                             <td>
                                 <?php 
                                     $id_registro = $ticket->id;
                                     $nombre_registro = 'el ticket' . $ticket->numero_ticket;
                                     $url_ver = '/tickets/ver';
 
-                                    if($rol === 'Administrador' && $rol === 'Cliente') {
+                                    if($rol === 'Cliente') {
                                         $url_editar = '/tickets/editar';
-                                        $url_eliminar = '/tickets/eliminar';
                                     }
                                     
                                     include __DIR__ . '/../../templates/dropdown-menu.php';
