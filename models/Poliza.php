@@ -182,6 +182,11 @@ class Poliza extends ActiveRecord {
             if ($this->monto_cobertura < 50000) {
                 self::$alertas['error'][] = 'El monto de cobertura mínimo es de $50,000';
             }
+
+            if ($this->costo < 500) {
+                self::$alertas['error'][] = 'El costo de la póliza no puede ser menor a $500';
+            }
+            
             if ($this->costo >= $this->monto_cobertura) {
                 self::$alertas['error'][] = 'El costo no puede ser mayor o igual a la cobertura';
             }

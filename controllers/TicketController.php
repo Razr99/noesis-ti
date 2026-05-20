@@ -147,4 +147,32 @@ class TicketController {
             'alertas' => $alertas
         ]);
     }
+
+    public static function editarTicket(Router $router) {
+        session_start();
+        isAuth();
+        rol(['Cliente']);
+
+        $alertas = [];
+        $id = $_GET['id'] ?? null;
+
+        if(!$id) {
+            header('Location: /tickets');
+            exit;
+        }
+
+        $ticket = Ticket::find($id);
+
+        if(!$ticket) {
+            header('Location: /tickets');
+            exit;
+        }
+
+
+        $router->render('dashboard/tickets/tickets-editar',[
+            'titulo' => 'Tickets - Editar Ticket',
+            'ticket' => $ticket,
+            'alertas' => $alertas
+        ]);
+    }
 }

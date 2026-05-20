@@ -80,6 +80,7 @@
                                         
                                         case 'Crítica':
                                             $clase = 'tabla-bandera-roja';
+                                            break;
 
                                         default:
                                             $clase = '';

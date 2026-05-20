@@ -211,6 +211,22 @@ function iniciarSelect2() {
                 }
             });
         }
+
+        if(tipo === 'estatus') {
+            $(selectElement).select2({
+                placeholder: 'Selecciona un estatus',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                    searching: function() {
+                        return "Buscando...";
+                    }
+                }
+            });
+        }
     });
 }
 
