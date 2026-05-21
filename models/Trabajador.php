@@ -238,4 +238,10 @@ class Trabajador extends ActiveRecord {
 
         return self::$alertas;
     }
+
+    public static function traerTecnicos() {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE rol = 'Técnico'";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
 }

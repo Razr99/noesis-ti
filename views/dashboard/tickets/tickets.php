@@ -122,7 +122,7 @@
                                     <?php echo $ticket->estatus; ?>
                                 </span>
                             </td>
-                            <td><?php echo $ticket->id_empleado ?? 'Sin Técnico asignado'; ?></td>
+                            <td><?php echo $ticket->nombre_tecnico ?? 'Sin Técnico asignado'; ?></td>
                             <td><?php echo $ticket->fecha_inicio; ?></td>
                             <td><?php echo $ticket->fecha_final ?? 'Aún no se ha finalizado el Ticket'; ?></td>
                             <td>

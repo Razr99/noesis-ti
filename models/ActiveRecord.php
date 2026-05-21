@@ -65,7 +65,7 @@ class ActiveRecord {
     public static function where($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        return array_shift( $resultado );
     }
 
     // SQL para Consultas Avanzadas.
@@ -116,6 +116,8 @@ class ActiveRecord {
         foreach($atributos as $key => $value) {
             $valores[] = "{$key}='{$value}'";
         }
+
+        debuguear($valores);
 
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );

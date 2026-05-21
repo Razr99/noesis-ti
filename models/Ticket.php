@@ -39,6 +39,7 @@ class Ticket extends ActiveRecord {
     //VARIABLES ADICIONALES
     public $nombre_categoria;
     public $nombre_empresa;
+    public $nombre_tecnico;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
@@ -96,6 +97,47 @@ class Ticket extends ActiveRecord {
         return self::$alertas;
     }
 
+    public function validarActualizarTicket() {
+        if(!$this->id_equipo) {
+            self::$alertas['error'][] = 'Debes elegir un equipo para asignarle un ticket';
+        }
+
+        if(!$this->prioridad) {
+            self::$alertas['error'][] = 'Debes elegir un tipo de prioridad';
+        }
+
+        if(!$this->id_categoria) {
+            self::$alertas['error'][] = 'Debes seleccionar una categoría para el ticket';
+        }
+
+        if (!$this->descripcion || mb_strlen(trim($this->descripcion), 'UTF-8') < 10) {
+            self::$alertas['error'][] = 'Debes añadir un comentario de almenos 20 caracteres a la descripción del ticket';
+        }
+
+        if(empty(self::$alertas['error'])) {
+            $archivo = $_FILES['ruta_imagen'] ?? null;
+
+            if($archivo && !empty($archivo['tmp_name'])) {
+                
+                $formatosPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+
+                if(!in_array($archivo['type'], $formatosPermitidos)) {
+                    self::$alertas['error'][] = 'Formato no válido. Solo se permite JPG, PNG o WEBP';
+                }
+
+                if($archivo['size'] > 2 * 1024 * 1024) {
+                    self::$alertas['error'][] = 'La imagen es muy pesada. Máximo 2MB';
+                }
+                
+                if($archivo['error'] !== 0) {
+                    self::$alertas['error'][] = 'Hubo un error técnico al cargar la imagen';
+                }
+            }
+        }
+
+        return self::$alertas;
+    }
+
     public function empresaInactiva() {
         $query = "SELECT estatus FROM empresa WHERE id = '" . self::$db->escape_string($this->id_empresa) . "' AND estatus = 'Inactiva' LIMIT 1";
         $resultado = self::$db->query($query);
@@ -139,5 +181,39 @@ class Ticket extends ActiveRecord {
         $nuevo_consecutivo = $fila['ultimo_consecutivo'] + 1;
         
         return $prefijo_categoria . "-" . $fecha_actual . "-" . $nuevo_consecutivo;
+    }
+
+    public static function traerTickets($id_empresa) {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE id_empresa = '{$id_empresa}'";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
+    public function actualizarTicketCliente() {
+        $prioridad = self::$db->escape_string($this->prioridad);
+        $estatus = self::$db->escape_string($this->estatus);
+        $descripcion = self::$db->escape_string($this->descripcion);
+        $fecha_actualizacion = self::$db->escape_string($this->fecha_actualizacion);
+        $id = self::$db->escape_string($this->id);
+
+        $ruta_evidencia = is_null($this->ruta_evidencia) || $this->ruta_evidencia === '' 
+            ? "NULL" 
+            : "'" . self::$db->escape_string($this->ruta_evidencia) . "'";
+
+        $fecha_final = is_null($this->fecha_final) || $this->fecha_final === '' 
+            ? "NULL" 
+            : "'" . self::$db->escape_string($this->fecha_final) . "'";
+
+        $query = "UPDATE " . static::$tabla . " SET ";
+        $query .= " prioridad = '{$prioridad}', ";
+        $query .= " estatus = '{$estatus}', ";
+        $query .= " descripcion = '{$descripcion}', ";
+        $query .= " ruta_evidencia = {$ruta_evidencia}, ";
+        $query .= " fecha_actualizacion = '{$fecha_actualizacion}', ";
+        $query .= " fecha_final = {$fecha_final} ";
+        $query .= " WHERE id = '{$id}' LIMIT 1 ";
+
+        $resultado = self::$db->query($query);
+        return $resultado;
     }
 }
