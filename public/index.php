@@ -71,5 +71,6 @@ $router->get('/tickets', [TicketController::class, 'tickets']);
 $router->get('/tickets/agregar', [TicketController::class, 'agregarTicket']);
 $router->post('/tickets/agregar', [TicketController::class, 'agregarTicket']);
 $router->get('/tickets/editar', [TicketController::class, 'editarTicket']);
+$router->post('/tickets/editar', [TicketController::class, 'editarTicket']);
 
 $router->comprobarRutas();
