@@ -129,7 +129,7 @@
                                 <?php 
                                     $id_registro = $ticket->id;
                                     $nombre_registro = 'el ticket' . $ticket->numero_ticket;
-                                    $url_ver = '/tickets/ver';
+                                    $url_ver = 'tickets/detalle';
 
                                     if($rol === 'Cliente') {
                                         $url_editar = '/tickets/editar';

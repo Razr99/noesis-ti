@@ -301,4 +301,35 @@ class TicketController {
             'alertas' => $alertas
         ]);
     }
+
+    public static function verDetalleTicket(Router $router) {
+        session_start();
+        isAuth();
+        rol(['Administrador','Cliente','Técnico']);
+
+        $alertas = [];
+        $id = $_GET['id'] ?? null;
+
+        if(!$id) {
+            header('Location: /tickets');
+            exit;
+        }
+
+        $ticket = Ticket::find($id);
+
+        if(!$ticket) {
+            header('Location: /tickets');
+            exit;
+        }
+
+        $ticket->traerDatosRelacionales();
+
+        $alertas = Ticket::getAlertas();
+
+        $router->render('dashboard/tickets/tickets-ver-detalle',[
+            'titulo' => 'Tickets - Detalle del Ticket',
+            'ticket' => $ticket,
+            'alertas' => $alertas
+        ]);
+    }
 }

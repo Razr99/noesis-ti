@@ -39,7 +39,10 @@ class Ticket extends ActiveRecord {
     //VARIABLES ADICIONALES
     public $nombre_categoria;
     public $nombre_empresa;
+    public $nombre_cliente;
     public $nombre_tecnico;
+    public $serie_equipo;
+    public $modelo_equipo;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
@@ -215,5 +218,40 @@ class Ticket extends ActiveRecord {
 
         $resultado = self::$db->query($query);
         return $resultado;
+    }
+
+    public function traerDatosRelacionales() {
+        if ($this->id_empresa) {
+            $query = "SELECT nombre_fiscal FROM empresa WHERE id = '" . self::$db->escape_string($this->id_empresa) . "' LIMIT 1";
+            $resultado = self::$db->query($query);
+            if ($resultado && $fila = $resultado->fetch_assoc()) {
+                $this->nombre_empresa = $fila['nombre_fiscal'];
+            }
+        }
+
+        if ($this->id_cliente) {
+            $query = "SELECT nombre FROM cliente WHERE id = '" . self::$db->escape_string($this->id_cliente) . "' LIMIT 1";
+            $resultado = self::$db->query($query);
+            if ($resultado && $fila = $resultado->fetch_assoc()) {
+                $this->nombre_cliente = $fila['nombre'];
+            }
+        }
+
+        if ($this->id_trabajador) {
+            $query = "SELECT nombre FROM trabajador WHERE id = '" . self::$db->escape_string($this->id_trabajador) . "' LIMIT 1";
+            $resultado = self::$db->query($query);
+            if ($resultado && $fila = $resultado->fetch_assoc()) {
+                $this->nombre_tecnico = $fila['nombre'];
+            }
+        }
+
+        if ($this->id_equipo) {
+            $query = "SELECT modelo, numero_serie FROM equipo WHERE id = '" . self::$db->escape_string($this->id_equipo) . "' LIMIT 1";
+            $resultado = self::$db->query($query);
+            if ($resultado && $fila = $resultado->fetch_assoc()) {
+                $this->modelo_equipo = $fila['modelo'];
+                $this->serie_equipo = $fila['numero_serie'];
+            }
+        }
     }
 }

@@ -1,0 +1,43 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.cuerpo-contenedor {
+    .contenedor {
+        .contenedor-detalle {
+            border-top: 1px solid v.$gris;
+            margin: 3rem 2rem;
+
+            .detalle {
+                border-bottom: 1px solid v.$gris;
+                padding-bottom: 1rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .detalle-item {
+                margin: 2rem 1rem;
+                p {
+                    padding: 0;
+                    color: v.$color-principal;
+                    font-weight: bold;
+
+                    span {
+                        color: v.$blanco;
+                        font-weight: normal;
+                    }
+                }
+                &.lista-item {
+                    display: flex;
+                    
+                    p {
+                        margin-right: 5rem;
+
+                        &:last-child {
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
