@@ -306,3 +306,170 @@ function iniciarBuscador() {
         });
     });
 }
+
+function imprimirFicha(numeroTicket) {
+    // 1. Capturamos el contenedor interno de la ficha
+    const elementoAImprimir = document.querySelector('.tarjeta-detalle');
+    
+    // 2. Creamos la ventana emergente
+    const ventanaImpresion = window.open('', '_blank', 'width=900,height=700');
+    
+    ventanaImpresion.document.write(`<html><head><title>Reporte de Ticket - ${numeroTicket}</title>`);
+    
+    // Inyectamos tus estilos base (opcional, pero dejamos los estilos inline blindados para impresión)
+    ventanaImpresion.document.write('<link rel="stylesheet" href="/build/css/app.css" type="text/css" />');
+    
+    // 3. Estilos de impresión corregidos y blindados contra encimamientos
+    ventanaImpresion.document.write(`
+        <style>
+            body { 
+                background: #ffffff !important; 
+                color: #000000 !important; 
+                padding: 30px; 
+                font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            .btn-imprimir { display: none !important; }
+            
+            /* Encabezado corporativo centrado */
+            .marca-reporte {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 3px double #0f172a;
+                padding-bottom: 15px;
+            }
+            .marca-reporte h1 {
+                font-size: 32px;
+                font-weight: 800;
+                letter-spacing: 2px;
+                color: #0f172a !important;
+                margin: 0;
+            }
+            .marca-reporte p {
+                font-size: 12px;
+                text-transform: uppercase;
+                color: #475569 !important;
+                margin: 5px 0 0 0;
+                letter-spacing: 3px;
+            }
+
+            .tarjeta-detalle { margin: 0 !important; padding: 0 !important; background: #ffffff !important; border: none !important; box-shadow: none !important; }
+            
+            .detalle-header {
+                border-bottom: 2px solid #000000 !important;
+                margin-bottom: 25px !important;
+                padding-bottom: 10px;
+            }
+            .detalle-header h4 { color: #000000 !important; font-size: 24px !important; margin: 0; }
+            .detalle-header p { color: #334155 !important; font-size: 14px !important; margin: 5px 0 0 0; font-weight: 600; }
+
+            /* 🛠️ SOLUCIÓN AQUÍ: Forzamos un diseño de filas limpias e independientes para el PDF */
+            .ficha-tecnica-grid { 
+                background-color: #f8fafc !important; 
+                border: 1px solid #cbd5e1 !important; 
+                padding: 20px !important; 
+                border-radius: 6px;
+                margin-bottom: 30px;
+                display: block !important; /* Rompemos el grid que causaba el encimamiento */
+            }
+            
+            /* Cada fila de información se autoajusta sin estorbar a la de al lado */
+            .ficha-item {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 8px 0;
+                border-bottom: 1px dashed #e2e8f0;
+            }
+            
+            .ficha-item:last-child {
+                border-bottom: none;
+            }
+            
+            /* La etiqueta (Label) ocupará un ancho fijo a la izquierda */
+            .ficha-item .ficha-label { 
+                color: #475569 !important; 
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 11px;
+                letter-spacing: 0.5px;
+                width: 180px; /* Margen forzado para alinear los datos */
+                min-width: 180px;
+                display: inline-block;
+            }
+            
+            /* El valor real (Value) se despliega limpiamente a la derecha */
+            .ficha-item .ficha-value { 
+                color: #000000 !important; 
+                font-size: 14px;
+                font-weight: 500;
+                flex-grow: 1;
+            }
+            
+            /* Ajuste para que descripciones largas rompan renglón correctamente abajo */
+            .ficha-item.ancho-completo {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            .ficha-item.ancho-completo .ficha-label {
+                margin-bottom: 5px;
+            }
+
+            /* 🏷️ Estilizado de Badges limpios para la hoja de papel */
+            .detalle-badge {
+                display: inline-block !important;
+                border: 1px solid #000000 !important;
+                color: #000000 !important;
+                background: #f1f5f9 !important;
+                padding: 2px 10px !important;
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                text-transform: uppercase;
+                border-radius: 4px !important;
+                margin: 0 !important;
+            }
+
+            /* 📊 Tabla de Historial perfectamente alineada */
+            .tabla-historial-contenedor { margin-top: 20px; width: 100%; }
+            .tabla-detalle-interna { border: 1px solid #cbd5e1 !important; width: 100% !important; border-collapse: collapse; }
+            .tabla-detalle-interna thead { background-color: #f1f5f9 !important; }
+            .tabla-detalle-interna thead th { 
+                color: #000000 !important; 
+                font-weight: 700;
+                padding: 10px 12px !important;
+                border-bottom: 2px solid #cbd5e1 !important; 
+                text-align: left;
+            }
+            .tabla-detalle-interna tbody tr td { 
+                color: #334155 !important; 
+                padding: 12px !important;
+                border-bottom: 1px solid #e2e8f0 !important; 
+                font-size: 13px;
+            }
+        </style>
+    `);
+    
+    ventanaImpresion.document.write('</head><body>');
+    
+    // Encabezado corporativo centrado
+    ventanaImpresion.document.write(`
+        <div class="marca-reporte">
+            <h1>NOESIS TI</h1>
+            <p>Sistemas de Gestión de Activos e Infraestructura</p>
+        </div>
+    `);
+    
+    ventanaImpresion.document.write(elementoAImprimir.innerHTML);
+    ventanaImpresion.document.write('</body></html>');
+    
+    ventanaImpresion.document.close();
+    
+    // Lanzar la previsualización nativa de impresión
+    setTimeout(() => {
+        ventanaImpresion.focus();
+        ventanaImpresion.print();
+        ventanaImpresion.close();
+    }, 500);
+}

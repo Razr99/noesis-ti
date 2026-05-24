@@ -1,43 +1,312 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.cuerpo-contenedor {
-    .contenedor {
-        .contenedor-detalle {
-            border-top: 1px solid v.$gris;
-            margin: 3rem 2rem;
+// Componente aislado para Fichas Técnicas / Ver Detalle
+.vista-detalle-layout {
+    background-color: v.$fondo-dashboard;
+    min-height: 100vh;
+    padding: 2rem;
+    margin-left: 24rem;
+    overflow-x: hidden;
 
-            .detalle {
-                border-bottom: 1px solid v.$gris;
-                padding-bottom: 1rem;
-                margin-bottom: 2.5rem;
+    .tarjeta-detalle {
+        background-color: v.$grisProfundo;
+        margin: 4rem 2rem;
+        border: 1px solid v.$grisOscuro;
+        border-radius: 1rem;
+        max-width: 100%;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        .btn-imprimir {
+            display: inline-flex;
+            align-items: center;
+            background-color: #2563eb; // Azul responsivo
+            color: #ffffff;
+            border: none;
+            padding: 1rem 1.8rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background-color: #1d4ed8;
             }
 
-            .detalle-item {
-                margin: 2rem 1rem;
-                p {
-                    padding: 0;
-                    color: v.$color-principal;
-                    font-weight: bold;
-
-                    span {
-                        color: v.$blanco;
-                        font-weight: normal;
-                    }
+            @media print {
+                // 1. Ocultar elementos globales del Dashboard que no van en el reporte
+                .sidebar, 
+                header, 
+                .btn-imprimir,
+                footer,
+                h3 { 
+                    display: none !important; 
                 }
-                &.lista-item {
-                    display: flex;
-                    
-                    p {
-                        margin-right: 5rem;
 
-                        &:last-child {
-                            margin-right: 0;
+                // 2. Resetear el Layout maestro para que ocupe toda la hoja blanca
+                .vista-detalle-layout {
+                    margin-left: 0 !important;
+                    padding: 0 !important;
+                    background-color: #ffffff !important;
+                    color: #000000 !important;
+                }
+
+                .tarjeta-detalle {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    border: none !important;
+                    background-color: #ffffff !important;
+                    box-shadow: none !important;
+
+                    .detalle-header {
+                        border-bottom: 2px solid #000000 !important;
+                        h4 { color: #000000 !important; }
+                        p { color: #475569 !important; }
+                    }
+
+                    // 3. Forzar el Grid a verse bien en papel impreso o PDF
+                    .ficha-tecnica-grid {
+                        background-color: #f8fafc !important; // Fondo gris muy tenue
+                        border: 1px solid #cbd5e1 !important;
+                        padding: 1.5rem !important;
+                        color: #000000 !important;
+
+                        .ficha-item {
+                            .ficha-label { color: #475569 !important; }
+                            .ficha-value { color: #000000 !important; }
+                        }
+                    }
+
+                    // Badges legibles en blanco y negro / escala de grises
+                    .detalle-badge {
+                        border: 1px solid #000000 !important;
+                        color: #000000 !important;
+                        background: transparent !important;
+                        padding: 0.2rem 0.8rem !important;
+                    }
+
+                    // 4. Adaptar la tabla interna en impresión (Sincronizada a 4 columnas)
+                    .tabla-historial-contenedor {
+                        .tabla-detalle-interna {
+                            border: 1px solid #000000 !important;
+                            table-layout: fixed !important;
+
+                            thead {
+                                background-color: #f1f5f9 !important;
+                                tr th {
+                                    color: #000000 !important;
+                                    border-bottom: 2px solid #000000 !important;
+                                }
+                            }
+
+                            tbody tr {
+                                border-bottom: 1px solid #e2e8f0 !important;
+                                td {
+                                    color: #000000 !important;
+                                    
+                                    &:nth-child(1) { width: 20% !important; color: #000000 !important; }
+                                    &:nth-child(2) { width: 50% !important; color: #000000 !important; }
+                                    &:nth-child(3) { width: 12% !important; color: #000000 !important; }
+                                    &:nth-child(4) { width: 18% !important; color: #000000 !important; }
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
 
+        // Encabezado interno de la ficha
+        .detalle-header {
+            border-bottom: 1px solid v.$grisOscuro;
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+
+            h4 {
+                margin: 0;
+                font-size: 2.4rem;
+                font-weight: 700;
+                color: #f8fafc; 
+            }
+            p {
+                margin: 0;
+                padding: 0.5rem 0 0 0;
+                font-size: 1.4rem;
+                color: #94a3b8; 
+            }
+        }
+
+        // Grid Técnico de Información (Reusable para equipos, tickets, etc.)
+        .ficha-tecnica-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3.5rem;
+            background-color: rgba(#1e293b, 0.35); 
+            padding: 2.5rem;
+            border-radius: 0.8rem;
+            border: 1px solid v.$grisOscuro;
+
+            .ficha-item {
+                display: flex;
+                flex-direction: column;
+                gap: 0.6rem;
+
+                .ficha-label {
+                    font-size: 1.2rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #94a3b8; 
+                    font-weight: 600;
+                }
+
+                .ficha-value {
+                    font-size: 1.5rem;
+                    color: #f1f5f9;
+                    font-weight: 500;
+                    line-height: 1.5;
+                }
+
+                &.ancho-completo {
+                    grid-column: 1 / -1;
+                }
+            }
+        }
+
+        // Badges específicos para estados internos de la ficha
+        .detalle-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+
+            &.critica {
+                background-color: rgba(#ef4444, 0.15);
+                color: #f87171;
+                border: 1px solid rgba(#ef4444, 0.3);
+            }
+            &.cancelado {
+                background-color: rgba(#64748b, 0.15);
+                color: #94a3b8;
+                border: 1px solid rgba(#64748b, 0.3);
+            }
+            &.pendiente {
+                background-color: rgba(#eab308, 0.15);
+                color: #fde047;
+                border: 1px solid rgba(#eab308, 0.3);
+            }
+            &.abierto {
+                background-color: rgba(#10b981, 0.15);
+                color: #34d399;
+                border: 1px solid rgba(#10b981, 0.3);
+            }
+        }
+
+        // Historial / Tabla interna aislada (Ajustada para 4 columnas con scroll controlado)
+        .tabla-historial-contenedor {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 2rem;
+
+            .tabla-detalle-interna {
+                min-width: 100%;
+                width: 100%;
+                table-layout: fixed;
+                border-collapse: collapse;
+                border: 1px solid v.$grisOscuro;
+                border-radius: 0.8rem;
+                overflow: hidden; 
+                font-size: 1.4rem;
+
+                thead {
+                    background-color: #1e293b; 
+                    
+                    tr th {
+                        padding: 1.5rem 2rem;
+                        color: #cbd5e1;
+                        font-weight: 600;
+                        text-align: left; 
+                        border-bottom: 2px solid v.$grisOscuro;
+
+                        &:nth-child(1) {
+                            width: 20%; 
+                            color: #f1f5f9;
+                            font-weight: 500;
+                        }
+
+                        // Columna 2: Descripción del Movimiento (50%) - Espaciosa y prioritaria
+                        &:nth-child(2) {
+                            width: 50%;
+                            color: #e2e8f0;
+                        }
+
+                        // Columna 3: Estatus (12%) - Nueva Columna agregada
+                        &:nth-child(3) {
+                            width: 12%;
+                            font-weight: 600;
+                        }
+
+                        // Columna 4: Fecha (18%)
+                        &:nth-child(4) {
+                            width: 18%;
+                            font-family: monospace; 
+                            font-size: 1.3rem;
+                        }
+                    }
+                }
+
+                tbody tr {
+                    border-bottom: 1px solid v.$grisOscuro;
+                    background-color: transparent;
+                    transition: background-color 0.2s ease;
+
+                    &:hover {
+                        background-color: rgba(#334155, 0.2); 
+                    }
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+
+                    td {
+                        white-space: normal; 
+                        word-wrap: break-word;
+                        text-align: left; 
+                        padding: 1.8rem 2rem;
+                        color: #94a3b8;
+
+                        // Columna 1: Atendió (20%)
+                        &:nth-child(1) {
+                            width: 20%; 
+                            color: #f1f5f9;
+                            font-weight: 500;
+                        }
+
+                        // Columna 2: Descripción del Movimiento (50%) - Espaciosa y prioritaria
+                        &:nth-child(2) {
+                            width: 50%;
+                            color: #e2e8f0;
+                        }
+
+                        // Columna 3: Estatus (12%) - Nueva Columna agregada
+                        &:nth-child(3) {
+                            width: 12%;
+                            font-weight: 600;
+                        }
+
+                        // Columna 4: Fecha (18%)
+                        &:nth-child(4) {
+                            width: 18%;
+                            font-family: monospace; 
+                            font-size: 1.3rem;
+                        }
+                    }
+                }
+            }
         }
     }
 }

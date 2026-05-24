@@ -194,4 +194,9 @@ class ActiveRecord {
           }
         }
     }
+
+    public static function getWhere($columna, $valor) {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
+        return self::consultarSQL($query);
+    }
 }

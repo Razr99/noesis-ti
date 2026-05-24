@@ -138,6 +138,41 @@
                         }
                     }
                 }
+
+                &.detalle_ticket {
+                    min-width: 100%;
+                    width: 100%;
+                    table-layout: fixed;
+
+                    thead tr th,
+                    tbody tr td {
+                        white-space: normal; 
+                        word-wrap: break-word;
+                        
+                        text-align: left; 
+                        padding: 1.5rem 2rem;
+
+                        &:nth-child(1) {
+                            width: 20%; 
+                        }
+
+                        &:nth-child(2) {
+                            width: 60%;
+                        }
+
+                        &:nth-child(3) {
+                            width: 20%;
+                        }
+                    }
+
+                    thead tr th {
+                        text-align: center;
+                    }
+
+                    tbody tr td {
+                        border-bottom: 1px solid v.$gris-oscuro;
+                    }
+                }
             }
 
             /* --- Ajustes del Empty State --- */

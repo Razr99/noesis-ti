@@ -262,7 +262,9 @@ class TicketController {
                         $ticketSeguimiento = new TicketSeguimiento();
                         $ticketSeguimiento->id_ticket = $ticket->id;
                         $ticketSeguimiento->id_cliente = $ticket->id_cliente;
+                        $ticketSeguimiento->seguimiento = $_SESSION['nombre'];
                         $ticketSeguimiento->descripcion = "El cliente ha cancelado el ticket";
+                        $ticketSeguimiento->estatus = $ticket->estatus;
                         $ticketSeguimiento->fecha = date('Y-m-d H:i:s');
 
                         $resultadoSeguimiento = $ticketSeguimiento->guardar();
@@ -316,6 +318,7 @@ class TicketController {
         }
 
         $ticket = Ticket::find($id);
+        $ticketSeguimiento = TicketSeguimiento::getWhere('id_ticket',$ticket->id);
 
         if(!$ticket) {
             header('Location: /tickets');
@@ -329,6 +332,7 @@ class TicketController {
         $router->render('dashboard/tickets/tickets-ver-detalle',[
             'titulo' => 'Tickets - Detalle del Ticket',
             'ticket' => $ticket,
+            'ticket_seguimiento' => $ticketSeguimiento,
             'alertas' => $alertas
         ]);
     }

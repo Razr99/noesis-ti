@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/build/vendor/css/flatpickr.min.css">
     <link rel="stylesheet" href="/build/vendor/css/flatpickr-dark.css">
     <link rel="stylesheet" href="/build/css/app.css">
+    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
 </head>
 <body>
     <?php echo $contenido; ?>
@@ -21,6 +22,7 @@
     <script src="/build/vendor/js/select2.min.js"></script>
     <script src="/build/vendor/js/flatpickr.js"></script>
     <script src="/build/vendor/js/flatpickr-es.js"></script>
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
     <?php echo $script ?? ''; ?>
 </body>
 </html>
