@@ -425,6 +425,15 @@ class TicketController {
         // =========================================================================
         // CASO 3: TÚ ERES EL TÉCNICO ASIGNADO (Carga normal de la vista)
         // =========================================================================
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            debuguear("entra");
+            $descriocion = s($_POST['descripcion']);
+            $estatus = s($_POST['estatus']);
+
+            debuguear($descriocion);
+        }
+
         $router->render('dashboard/tickets/tickets-seguimiento', [
             'titulo' => 'Tickets - Seguimiento de Técnico',
             'alertas' => $alertas,

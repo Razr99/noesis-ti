@@ -76,4 +76,5 @@ $router->get('/tickets/detalle', [TicketController::class, 'verDetalleTicket']);
 
 //RUTAS REPORTES
 $router->get('/tickets/seguimiento', [TicketController::class, 'seguimientoTecnico']);
+$router->post('/tickets/seguimiento', [TicketController::class, 'seguimientoTecnico']);
 $router->comprobarRutas();

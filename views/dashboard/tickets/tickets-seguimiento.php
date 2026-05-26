@@ -13,7 +13,7 @@
 
             <?php include_once __DIR__ . '/../../templates/alertas.php'; ?>
 
-            <form method="POST" action="/tickets/editar?id=<?php echo $ticket->id; ?>" class="formulario-dashboard">          
+            <form method="POST" action="/tickets/seguimiento" class="formulario-dashboard">       
                 <div class="campo">
                     <label for="descripcion">Descripción</label>
                     <textarea
@@ -21,8 +21,7 @@
                         name="descripcion"
                         type="textarea"
                         placeholder="Ingresa la redacción del seguimiento"
-                    >
-                    </textarea>
+                    ></textarea>
                 </div>
                 <div class="campo">
                     <label for="estatus">Estatus</label>
