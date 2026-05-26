@@ -35,21 +35,36 @@
                         </option>
                     </select>
                 </div>
-                <div class="campo">
-                    <label for="estatus">Estatus</label>
-                    <select id="estatus" name="estatus" data-tipo="estatus" class="formulario__campo buscador">
-                        <option value="" disabled <?php echo (empty($ticket->prioridad)) ? 'selected' : ''; ?>>
-                            Selecciona un estatus
-                        </option>
+                <?php if($rol === 'Cliente'): ?>
+                    <div class="campo">
+                        <label for="estatus">Estatus</label>
+                        <select id="estatus" name="estatus" data-tipo="estatus" class="formulario__campo buscador">
+                            <option value="" disabled <?php echo (empty($ticket->prioridad)) ? 'selected' : ''; ?>>
+                                Selecciona un estatus
+                            </option>
 
-                        <option value="Abierto" <?php echo ($ticket->estatus === 'Abierto') ? 'selected' : ''; ?>>
-                            Abierto
-                        </option>
-                        <option value="Cancelado" <?php echo ($ticket->estatus === 'Cancelado') ? 'selected' : ''; ?>>
-                            Cancelado
-                        </option>
-                    </select>
-                </div>
+                            <option value="Abierto" <?php echo ($ticket->estatus === 'Abierto') ? 'selected' : ''; ?>>
+                                Abierto
+                            </option>
+                            <option value="Cancelado" <?php echo ($ticket->estatus === 'Cancelado') ? 'selected' : ''; ?>>
+                                Cancelado
+                            </option>
+                        </select>
+                    </div>
+                <?php else: ?>
+                    <div class="campo">
+                        <label for="estatus">Estatus</label>
+                        <select id="estatus" name="estatus" data-tipo="estatus" class="formulario__campo buscador">
+                            <option value="" disabled <?php echo (empty($ticket->prioridad)) ? 'selected' : ''; ?>>
+                                Selecciona un estatus
+                            </option>
+
+                            <option value="Abierto" <?php echo ($ticket->estatus === 'Abierto') ? 'selected' : ''; ?>>
+                                Abierto
+                            </option>
+                        </select>
+                    </div>
+                <?php endif; ?>
                 <div class="campo">
                     <label for="ruta_evidencia">Carga una imagen como evidencia</label>
                     <input

@@ -131,7 +131,7 @@
                                     $nombre_registro = 'el ticket' . $ticket->numero_ticket;
                                     $url_ver = 'tickets/detalle';
 
-                                    if($rol === 'Cliente') {
+                                    if($rol === 'Cliente' || $rol === 'Administrador') {
                                         $url_editar = '/tickets/editar';
                                     }
                                     

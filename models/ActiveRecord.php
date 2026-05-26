@@ -117,8 +117,6 @@ class ActiveRecord {
             $valores[] = "{$key}='{$value}'";
         }
 
-        debuguear($valores);
-
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
@@ -198,5 +196,25 @@ class ActiveRecord {
     public static function getWhere($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         return self::consultarSQL($query);
+    }
+
+    public function tomarTicketCustom($id_tecnico) {
+        // 1. Preparamos los datos locales para el objeto por si se usan después de guardar
+        $this->id_trabajador = $id_tecnico;
+        $this->fecha_actualizacion = date('Y-m-d H:i:s');
+        $this->estatus = 'En Proceso';
+
+        // 2. Ejecutamos una consulta SQL directa a la base de datos
+        // Usamos self::$db que es la conexión de MySQLi heredada de ActiveRecord
+        $query = "UPDATE ticket SET ";
+        $query .= " id_trabajador = '" . self::$db->escape_string($this->id_trabajador) . "', ";
+        $query .= " fecha_actualizacion = '" . self::$db->escape_string($this->fecha_actualizacion) . "', ";
+        $query .= " estatus = '" . self::$db->escape_string($this->estatus) . "' ";
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " LIMIT 1";
+
+        // 3. Ejecutar la sentencia
+        $resultado = self::$db->query($query);
+        return $resultado;
     }
 }

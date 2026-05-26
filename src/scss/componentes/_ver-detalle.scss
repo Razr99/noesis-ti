@@ -308,5 +308,17 @@
                 }
             }
         }
+
+        .contenedor-botones {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 2rem;
+            .tomar-ticket {
+                display: block;
+                button {
+                    display: inline;
+                }
+            }
+        }
     }
 }

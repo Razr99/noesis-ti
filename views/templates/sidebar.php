@@ -24,6 +24,5 @@
         
         <a class="<?php echo(str_contains($titulo, 'Equipos')) ? 'activo' : '' ?>" href="/equipos">Equipos</a>
         <a class="<?php echo(str_contains($titulo, 'Tickets')) ? 'activo' : '' ?>" href="/tickets">Tickets</a>
-        <a class="<?php echo(str_contains($titulo, 'Reportes')) ? 'activo' : '' ?>" href="#">Reportes</a>
     </nav>
 </aside>

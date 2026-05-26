@@ -172,7 +172,7 @@ class TicketController {
     public static function editarTicket(Router $router) {
         session_start();
         isAuth();
-        rol(['Cliente']);
+        rol(['Cliente','Administrador']);
 
         $alertas = [];
         $id = $_GET['id'] ?? null;
@@ -276,6 +276,11 @@ class TicketController {
                                 'icono' => 'warning'
                             ];
                         }
+                    } elseif($ticket->estatus === 'En Proceso') {
+                        $ticketSeguimiento = new TicketSeguimiento();
+                        $ticketSeguimiento->id_ticket = $ticket->id;
+                        $ticketSeguimiento->seguimiento = $_SESSION['nombre'];
+                        $ticketSeguimiento->descripcion = "El administrador " . $_SESSION['nombre'] . " ha cambiado el estatus en Proceso";
                     }
 
                     $_SESSION['sweetalert'] = [
@@ -334,6 +339,97 @@ class TicketController {
             'ticket' => $ticket,
             'ticket_seguimiento' => $ticketSeguimiento,
             'alertas' => $alertas
+        ]);
+    }
+
+    public static function seguimientoTecnico(Router $router) {
+        session_start();
+        isAuth();
+        rol(['Técnico']);
+
+        $alertas = [];
+        $id = $_GET['id'] ?? null;
+
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+        if(!$id) {
+            header('Location: /tickets');
+            exit;
+        }
+        
+        $ticket = Ticket::find($id);
+        $ticketSeguimiento = new TicketSeguimiento();
+
+        if(!$ticket) {
+            header('Location: /tickets');
+            exit;
+        }
+
+        // =========================================================================
+        // CASO 1: EL TICKET NO TIENE TÉCNICO ASIGNADO
+        // =========================================================================
+        if (empty($ticket->id_trabajador)) {
+            
+            $resultado = $ticket->tomarTicketCustom($_SESSION['id']);
+
+            if ($resultado) {
+                $ticketSeguimiento->id_ticket = $ticket->id;
+                $ticketSeguimiento->id_trabajador = $_SESSION['id'];
+                $ticketSeguimiento->id_cliente = $ticket->id_cliente;
+                $ticketSeguimiento->atiende = $_SESSION['nombre'];
+                $ticketSeguimiento->descripcion = "El Técnico " . $_SESSION['nombre'] . " ha tomado el ticket.";
+                $ticketSeguimiento->estatus = $ticket->estatus;
+                $ticketSeguimiento->fecha = date('Y-m-d H:i:s');
+                
+                $resultadoSeguimiento = $ticketSeguimiento->guardar();
+                
+                if ($resultadoSeguimiento) {
+                    $_SESSION['sweetalert'] = [
+                        'titulo' => 'Ticket Aceptado',
+                        'mensaje' => 'Has tomado este Ticket exitosamente.',
+                        'icono' => 'success'
+                    ];
+                } else {
+                    $_SESSION['sweetalert'] = [
+                        'titulo' => 'Aviso',
+                        'mensaje' => 'Se tomó el ticket, pero hubo un detalle al crear el historial.',
+                        'icono' => 'warning'
+                    ];
+                }
+            } else {
+                $_SESSION['sweetalert'] = [
+                    'titulo' => 'Error',
+                    'mensaje' => 'No se pudo asignar el ticket, inténtalo más tarde.',
+                    'icono' => 'error'
+                ];
+                header('Location: /tickets');
+                exit;
+            }
+
+            header("Location: /tickets/seguimiento?id=" . $ticket->id);
+            exit;
+        } 
+        
+        // =========================================================================
+        // CASO 2: EL TICKET YA TIENE UN TÉCNICO ASIGNADO (Y NO ERES TÚ)
+        // =========================================================================
+        if ($ticket->id_trabajador !== $_SESSION['id']) {
+            $_SESSION['sweetalert'] = [
+                'titulo' => 'Ticket No Disponible',
+                'mensaje' => 'Este ticket ya se encuentra asignado a otro técnico.',
+                'icono' => 'error'
+            ];
+            header('Location: /tickets');
+            exit;
+        }
+
+        // =========================================================================
+        // CASO 3: TÚ ERES EL TÉCNICO ASIGNADO (Carga normal de la vista)
+        // =========================================================================
+        $router->render('dashboard/tickets/tickets-seguimiento', [
+            'titulo' => 'Tickets - Seguimiento de Técnico',
+            'alertas' => $alertas,
+            'ticket' => $ticket,
+            'ticket_seguimiento' => $ticketSeguimiento
         ]);
     }
 }

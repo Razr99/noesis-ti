@@ -14,11 +14,11 @@
 
     <div class="tarjeta-detalle">
         <div class="detalle-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h4>Seguimiento de Ticket</h4>
-            <p>Reporte de seguimiento de Ticket</p> 
+            <div>
+                <h4>Seguimiento de Ticket</h4>
+                <p>Reporte de seguimiento de Ticket</p> 
+            </div>
         </div>
-    </div>
 
         <div class="ficha-tecnica-grid">
             <div class="ficha-item">
@@ -83,12 +83,22 @@
             </div>
         </div>
 
-        <button onclick="imprimirFicha('<?php echo s($ticket->numero_ticket); ?>')" class="btn-imprimir">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
-                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-            </svg>
-            Generar Reporte / PDF
-        </button>
+        <div class="contenedor-botones">
+            <button onclick="imprimirFicha('<?php echo s($ticket->numero_ticket); ?>')" class="btn-imprimir">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                </svg>
+                Generar Reporte / PDF
+            </button>
+
+            <?php if($rol === 'Técnico'): ?>
+                <div class="btn-azul btn-agregar">
+                    <button id="btn-tomar-ticket" data-id="<?php echo $ticket->id; ?>">
+                        Tomar Ticket
+                    </button>
+                </div>
+            <?php endif; ?>
+        </div>
 
         <div class="tabla-historial-contenedor">
             <table class="tabla-detalle-interna">

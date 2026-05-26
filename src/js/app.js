@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     iniciarSelect2();
     iniciarCalendario();
     iniciarBuscador();
+    iniciarTomarTicket();
 });
 
 function mostrarAlertaSesion() {
@@ -472,4 +473,33 @@ function imprimirFicha(numeroTicket) {
         ventanaImpresion.print();
         ventanaImpresion.close();
     }, 500);
+}
+
+function iniciarTomarTicket() {
+    const btnTomar = document.getElementById('btn-tomar-ticket');
+    
+    // Validamos que el botón exista en la vista actual para evitar errores en consola
+    if (!btnTomar) return; 
+
+    btnTomar.addEventListener('click', function() {
+        // Extraemos el ID del ticket desde el atributo data-id
+        const ticketId = this.getAttribute('data-id');
+        
+        // Configuramos la alerta de SweetAlert2
+        Swal.fire({
+            title: '¿Estás seguro de tomar este ticket?',
+            text: "Se te asignará como el técnico responsable de este reporte.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, tomar ticket',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            // Si confirma, redirigimos a la ruta de seguimiento con el ID
+            if (result.isConfirmed) {
+                window.location.href = `/tickets/seguimiento?id=${ticketId}`;
+            }
+        });
+    });
 }
