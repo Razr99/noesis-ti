@@ -198,6 +198,18 @@ class ActiveRecord {
         return self::consultarSQL($query);
     }
 
+    public static function contarWhere($columna, $valor) {
+        // Agregamos el espacio correcto y sanitizamos el valor por seguridad
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla . " WHERE $columna = '" . self::$db->escape_string($valor) . "'";
+        
+        $resultado = self::$db->query($query);
+        if($resultado) {
+            $fila = $resultado->fetch_assoc();
+            return (int) $fila['total']; // Devolvemos el número entero directamente
+        }
+        return 0;
+    }
+
     public function tomarTicketCustom($id_tecnico) {
         // 1. Preparamos los datos locales para el objeto por si se usan después de guardar
         $this->id_trabajador = $id_tecnico;

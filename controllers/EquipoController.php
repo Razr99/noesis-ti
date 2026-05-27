@@ -5,6 +5,7 @@ namespace Controllers;
 use MVC\Router;
 use Model\Equipo;
 use Model\Empresa;
+use Model\Ticket;
 
 class EquipoController {
     public static function equipos(Router $router) {
@@ -298,5 +299,34 @@ class EquipoController {
             header('Location: /equipos');
             exit;
         }
+    }
+
+    public static function verEquipo(Router $router) {
+        session_start();
+        rol(['Administrador','Cliente','Técnico']);
+        $id = $_GET['id'] ?? null;
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+
+        if(!$id) {
+            header('Location: /equipos');
+            return;
+        }
+
+        $equipo = Equipo::find($id);
+        
+        if(!$equipo) {
+            header('Location: /equipos');
+            return;
+        }
+        
+        // --- CAMBIO AQUÍ: Traemos los tickets con el nombre del cliente ya cruzado ---
+        $tickets_relacionados = Ticket::getTicketsConClienteByEquipo($equipo->id);
+        // -----------------------------------------------------------------------------
+
+        $router->render('dashboard/equipos/equipo-ver', [
+            'titulo' => 'Detalle del Equipo',
+            'equipo' => $equipo,
+            'tickets_relacionados' => $tickets_relacionados
+        ]);
     }
 }

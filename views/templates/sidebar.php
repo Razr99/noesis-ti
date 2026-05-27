@@ -19,7 +19,7 @@
         <?php endif; ?>
         
         <?php if(in_array($rol, ['Cliente'])) : ?>
-            <a class="<?php echo(str_contains($titulo, 'Mi Empresa')) ? 'activo' : '' ?>" href="#">Mi Empresa</a>
+            <a class="<?php echo(str_contains($titulo, 'Mi Empresa')) ? 'activo' : '' ?>" href="/empresas/ver?id=<?php echo $_SESSION['id_empresa']; ?>">Mi Empresa</a>
         <?php endif; ?>
         
         <a class="<?php echo(str_contains($titulo, 'Equipos')) ? 'activo' : '' ?>" href="/equipos">Equipos</a>

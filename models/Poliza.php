@@ -268,4 +268,16 @@ class Poliza extends ActiveRecord {
         $resultado = self::$db->query($query);
         return $resultado->num_rows > 0;
     }
+
+    public static function findVigenteByEmpresa($id_empresa) {
+        // 1. Construir la consulta SQL
+        $query = "SELECT * FROM poliza WHERE id_empresa = " . (int)$id_empresa . " AND estatus = 'Vigente' LIMIT 1";
+        
+        // 2. Usar tu función nativa de ActiveRecord para obtener un array de objetos Poliza
+        $resultado = self::consultarSQL($query);
+        
+        // 3. Como usar 'LIMIT 1' siempre traerá un array de un solo elemento (o vacío),
+        // usamos array_shift para extraer y retornar directamente el objeto Poliza, o NULL si no encontró nada.
+        return array_shift($resultado); 
+    }
 }

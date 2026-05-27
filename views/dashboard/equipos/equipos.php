@@ -98,6 +98,7 @@
                                 <?php 
                                     $id_registro = $equipo->id;
                                     $nombre_registro = 'el equipo ' . $equipo->numero_serie;
+                                    $url_ver = '/equipos/ver';
                                     $url_editar = '/equipos/editar';
                                     $url_eliminar = '/equipos/eliminar';
                                     include __DIR__ . '/../../templates/dropdown-menu.php'; 

@@ -311,7 +311,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (1,10,NULL,19,3,1,'INC-20260519-1','Alta','Abierto','La pantalla después de encender el equipo, 10 minutos y se pone en azul','a2e7c8664d28531707820760104b5633.jpg','2026-05-19 10:28:15',NULL,NULL),(2,10,NULL,21,3,4,'SYS-20260519-1','Baja','Abierto','No tengo acceso a internet','fdc882908f7a33b6d934805c8c41b1ce.jpg','2026-05-19 10:33:02',NULL,NULL),(3,16,NULL,9,6,5,'CCTV-20260519-1','Media','Abierto','Se programa instalación de Office para las 5:00 P.M.','','2026-05-19 17:55:02',NULL,NULL),(4,10,NULL,19,3,5,'CCTV-20260519-2','Crítica','Abierto','Adobe Ilustrator','aee31923a182bc994718d04e00979e66.jpg','2026-05-19 18:58:10',NULL,NULL),(5,17,42,10,2,11,'TCK-20260519-1','Crítica','Abierto','Al director General se le atora muy constante las hojas al imprimir desde MAC','2deea22e0f21a0498da9c47f36e7aef9.jpg','2026-05-19 19:13:43',NULL,NULL),(6,17,NULL,1,2,2,'IMP-20260520-1','Alta','Abierto','Me salen muchos anuncios en el navegador','','2026-05-20 17:53:40',NULL,NULL),(8,17,NULL,1,2,1,'INC-20260520-1','Media','Abierto','PRUEBA 123456789101112','b00379f5e8546256df01227c7439b083.jpg','2026-05-20 19:57:42','2026-05-21 16:32:10',NULL),(9,17,NULL,1,2,2,'IMP-20260520-2','Crítica','Cancelado','PRUEBAS DEL 1 AL 3','e1421378d443889b24f797dffe4386ad.jpg','2026-05-20 22:18:13','2026-05-20 22:40:17','2026-05-20 22:40:17');
+INSERT INTO `ticket` VALUES (1,10,NULL,19,3,1,'INC-20260519-1','Alta','Abierto','La pantalla después de encender el equipo, 10 minutos y se pone en azul','a2e7c8664d28531707820760104b5633.jpg','2026-05-19 10:28:15',NULL,NULL),(2,10,NULL,21,3,4,'SYS-20260519-1','Baja','Abierto','No tengo acceso a internet','fdc882908f7a33b6d934805c8c41b1ce.jpg','2026-05-19 10:33:02',NULL,NULL),(3,16,NULL,9,6,5,'CCTV-20260519-1','Media','Abierto','Se programa instalación de Office para las 5:00 P.M.','','2026-05-19 17:55:02',NULL,NULL),(4,10,NULL,19,3,5,'CCTV-20260519-2','Crítica','Abierto','Adobe Ilustrator','aee31923a182bc994718d04e00979e66.jpg','2026-05-19 18:58:10',NULL,NULL),(5,17,42,10,2,11,'TCK-20260519-1','Crítica','En Proceso','Al director General se le atora muy constante las hojas al imprimir desde MAC','2deea22e0f21a0498da9c47f36e7aef9.jpg','2026-05-19 19:13:43',NULL,NULL),(6,17,NULL,1,2,2,'IMP-20260520-1','Alta','Abierto','Me salen muchos anuncios en el navegador','','2026-05-20 17:53:40',NULL,NULL),(8,17,42,1,2,1,'INC-20260520-1','Media','En Proceso','PRUEBA 123456789101112','b00379f5e8546256df01227c7439b083.jpg','2026-05-20 19:57:42','2026-05-25 18:48:43',NULL),(9,17,NULL,1,2,2,'IMP-20260520-2','Crítica','Cancelado','PRUEBAS DEL 1 AL 3','e1421378d443889b24f797dffe4386ad.jpg','2026-05-20 22:18:13','2026-05-20 22:40:17','2026-05-20 22:40:17');
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -366,7 +366,7 @@ CREATE TABLE `ticket_seguimiento` (
   CONSTRAINT `id_cliente_FK` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
   CONSTRAINT `id_ticket_FK` FOREIGN KEY (`id_ticket`) REFERENCES `ticket` (`id`),
   CONSTRAINT `id_trabajador_FK` FOREIGN KEY (`id_trabajador`) REFERENCES `trabajador` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,7 +375,7 @@ CREATE TABLE `ticket_seguimiento` (
 
 LOCK TABLES `ticket_seguimiento` WRITE;
 /*!40000 ALTER TABLE `ticket_seguimiento` DISABLE KEYS */;
-INSERT INTO `ticket_seguimiento` VALUES (1,9,17,NULL,'Leonardo Alonso','El cliente ha cancelado el ticket','Cancelado','2026-05-20 22:40:17');
+INSERT INTO `ticket_seguimiento` VALUES (1,9,17,NULL,'Leonardo Alonso','El cliente ha cancelado el ticket','Cancelado','2026-05-20 22:40:17'),(3,8,17,42,' Karina Segundo','El Técnico  Karina Segundo ha tomado el ticket.','En Proceso','2026-05-25 18:48:43');
 /*!40000 ALTER TABLE `ticket_seguimiento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -423,4 +423,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-23 19:40:19
+-- Dump completed on 2026-05-26 19:46:35

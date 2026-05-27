@@ -227,4 +227,9 @@ class Cliente extends ActiveRecord {
 
         return self::$alertas;
     }
+
+    public static function countByEmpresa($id_empresa) {
+        $query = "SELECT COUNT(*) FROM cliente WHERE id_empresa = " . (int)$id_empresa;
+        // Ejecuta la query y devuelve el entero
+    }
 }

@@ -254,4 +254,19 @@ class Ticket extends ActiveRecord {
             }
         }
     }
+
+    public static function getTicketsConClienteByEquipo($id_equipo) {
+        // 1. Construir la consulta con las uniones correctas
+        $query = "SELECT t.*, c.nombre as nombre_cliente, u.nombre as nombre_tecnico ";
+        $query .= "FROM ticket t ";
+        $query .= "LEFT JOIN cliente c ON t.id_cliente = c.id ";
+        $query .= "LEFT JOIN cliente u ON t.id_trabajador = u.id "; 
+        $query .= "WHERE t.id_equipo = " . (int)$id_equipo . " ";
+        
+        // --- CORRECCIÓN AQUÍ: Cambiamos t.fecha por t.fecha_inicio ---
+        $query .= "ORDER BY t.fecha_inicio DESC"; 
+        // -------------------------------------------------------------
+
+        return self::consultarSQL($query);
+    }
 }

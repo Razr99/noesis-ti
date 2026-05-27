@@ -43,6 +43,7 @@ class Equipo extends ActiveRecord {
     public $detalles;
     //VARIABLES ADICIONALES
     public $empresa;
+    public $nombre_cliente;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
@@ -261,5 +262,10 @@ class Equipo extends ActiveRecord {
             $equipos[] = new Equipo($row);
         }
         return $equipos;
+    }
+
+    public static function countByEmpresa($id_empresa) {
+        $query = "SELECT COUNT(*) FROM equipo WHERE id_empresa = " . (int)$id_empresa;
+        // Ejecuta la query y devuelve el entero
     }
 }

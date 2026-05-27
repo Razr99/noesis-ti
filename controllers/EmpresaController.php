@@ -3,6 +3,10 @@
 namespace Controllers;
 
 use Model\Empresa;
+use Model\Ticket;
+use Model\Equipo;
+use Model\Cliente;
+use Model\Poliza;
 use MVC\Router;
 
 class EmpresaController {
@@ -205,6 +209,38 @@ class EmpresaController {
             'titulo' => 'Empresas - Editar Empresa',
             'empresa' => $empresa,
             'alertas' => $alertas
+        ]);
+    }
+
+    public static function verEmpresa(Router $router) {
+        session_start();
+        isAuth();
+        rol(['Cliente','Administrador','Técnico']);
+        $id = $_GET['id'] ?? null;
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+
+        if(!$id) {
+            header('Location: /empresas');
+            return;
+        }
+
+        $empresa = Empresa::find($id); 
+
+        if(!$empresa) {
+            header('Location: /empresas');
+            return;
+        }
+
+        $empresa->total_tickets   = Ticket::contarWhere('id_empresa', $empresa->id);
+        $empresa->total_equipos   = Equipo::contarWhere('id_empresa', $empresa->id);
+        $empresa->total_empleados = Cliente::contarWhere('id_empresa', $empresa->id);
+
+        
+        $empresa->poliza = Poliza::findVigenteByEmpresa($id); 
+
+        $router->render('dashboard/empresas/empresa-ver', [
+            'titulo' => 'Detalle de Empresa',
+            'empresa' => $empresa
         ]);
     }
 }

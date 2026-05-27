@@ -26,6 +26,11 @@ class Empresa extends ActiveRecord {
     public $representante_legal;
     public $estatus;
     public $fecha_alta;
+    //VARIABLES ADICIONALES
+    public $total_tickets;
+    public $total_equipos;
+    public $total_empleados;
+    public $poliza;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
