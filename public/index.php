@@ -65,6 +65,10 @@ $router->post('/equipos/agregar', [EquipoController::class, 'agregarEquipo']);
 $router->post('/equipos/eliminar', [EquipoController::class, 'eliminarEquipo']);
 $router->get('/equipos/editar', [EquipoController::class, 'editarEquipo']);
 $router->post('/equipos/editar', [EquipoController::class, 'editarEquipo']);
+$router->get('/equipos/ver', [EquipoController::class, 'verEquipo']);
+
+//RUTAS EMPRESAS
+$router->get('/empresas/ver', [EmpresaController::class, 'verEmpresa']);
 
 //RUTAS DE TICKETS
 $router->get('/tickets', [TicketController::class, 'tickets']);
