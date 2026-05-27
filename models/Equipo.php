@@ -268,4 +268,42 @@ class Equipo extends ActiveRecord {
         $query = "SELECT COUNT(*) FROM equipo WHERE id_empresa = " . (int)$id_empresa;
         // Ejecuta la query y devuelve el entero
     }
+
+    public static function contar(): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla;
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
+
+    public static function contarPorTipo(): array {
+        $query = "SELECT tipo_equipo, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  GROUP BY tipo_equipo
+                  ORDER BY total DESC";
+ 
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['tipo_equipo']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function contarPorEstatus(): array {
+        $query = "SELECT estatus, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  GROUP BY estatus
+                  ORDER BY FIELD(estatus, 'Excelente', 'Bueno', 'Regular', 'Dañado', 'Baja')";
+ 
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['estatus']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
 }

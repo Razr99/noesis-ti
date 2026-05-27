@@ -181,4 +181,12 @@ class Empresa extends ActiveRecord {
 
         return $resultado->num_rows > 0;
     }
+
+    public static function contarActivas(): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla . " WHERE estatus = 'Activa'";
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
 }

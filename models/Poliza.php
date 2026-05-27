@@ -280,4 +280,13 @@ class Poliza extends ActiveRecord {
         // usamos array_shift para extraer y retornar directamente el objeto Poliza, o NULL si no encontró nada.
         return array_shift($resultado); 
     }
+
+    public static function contarVigentes(): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla . "
+                  WHERE fecha_vencimiento >= CURDATE()";
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
 }

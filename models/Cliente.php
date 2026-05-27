@@ -232,4 +232,12 @@ class Cliente extends ActiveRecord {
         $query = "SELECT COUNT(*) FROM cliente WHERE id_empresa = " . (int)$id_empresa;
         // Ejecuta la query y devuelve el entero
     }
+
+    public static function contar(): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla;
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
 }

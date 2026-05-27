@@ -269,4 +269,87 @@ class Ticket extends ActiveRecord {
 
         return self::consultarSQL($query);
     }
+
+    public static function contarPorEstatus(): array {
+        $query = "SELECT estatus, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  GROUP BY estatus";
+ 
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['estatus']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function contarPorPrioridad(): array {
+        $query = "SELECT prioridad, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  GROUP BY prioridad
+                  ORDER BY FIELD(prioridad, 'Baja', 'Media', 'Alta', 'Crítica')";
+ 
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['prioridad']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function porUltimosMeses(int $meses = 6): array {
+        $query = "SELECT
+                    DATE_FORMAT(fecha_inicio, '%b') AS mes,
+                    DATE_FORMAT(fecha_inicio, '%Y-%m') AS mes_orden,
+                    SUM(CASE WHEN estatus IN ('Abierto', 'En Proceso') THEN 1 ELSE 0 END) AS abiertos,
+                    SUM(CASE WHEN estatus IN ('Cerrado', 'Cancelado') THEN 1 ELSE 0 END) AS cerrados
+                  FROM " . static::$tabla . "
+                  WHERE fecha_inicio >= DATE_SUB(NOW(), INTERVAL $meses MONTH)
+                  GROUP BY mes_orden, mes
+                  ORDER BY mes_orden ASC";
+ 
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[] = [
+                'mes'      => $fila['mes'],
+                'abiertos' => (int) $fila['abiertos'],
+                'cerrados' => (int) $fila['cerrados'],
+            ];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function recientesSinAsignar(int $limite = 5): array {
+        $query = "SELECT
+                    t.id,
+                    t.numero_ticket,
+                    t.prioridad,
+                    t.estatus,
+                    t.fecha_inicio,
+                    e.nombre_fiscal AS nombre_empresa
+                  FROM ticket t
+                  LEFT JOIN empresa e ON t.id_empresa = e.id
+                  WHERE t.id_trabajador IS NULL
+                    AND t.estatus = 'Abierto'
+                  ORDER BY
+                    FIELD(t.prioridad, 'Crítica', 'Alta', 'Media', 'Baja'),
+                    t.fecha_inicio ASC
+                  LIMIT $limite";
+ 
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $obj = new static;
+            foreach ($fila as $key => $value) {
+                $obj->$key = $value;
+            }
+            $datos[] = $obj;
+        }
+        $resultado->free();
+        return $datos;
+    }
 }
