@@ -240,4 +240,23 @@ class Cliente extends ActiveRecord {
         $resultado->free();
         return (int) $fila['total'];
     }
+
+    public static function contarPorEmpresa(): array {
+        $query = "SELECT e.nombre_fiscal AS empresa, COUNT(c.id) as total
+                  FROM cliente c
+                  LEFT JOIN empresa e ON c.id_empresa = e.id
+                  GROUP BY c.id_empresa, e.nombre_fiscal
+                  ORDER BY total DESC
+                  LIMIT 10";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[] = [
+                'empresa' => $fila['empresa'],
+                'total'   => (int) $fila['total'],
+            ];
+        }
+        $resultado->free();
+        return $datos;
+    }
 }

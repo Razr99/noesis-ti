@@ -244,4 +244,18 @@ class Trabajador extends ActiveRecord {
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
+
+    public static function contarPorRol(): array {
+        $query = "SELECT rol, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  WHERE estatus_cuenta = 'Activa'
+                  GROUP BY rol";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['rol']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
 }

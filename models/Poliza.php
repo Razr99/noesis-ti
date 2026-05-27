@@ -289,4 +289,14 @@ class Poliza extends ActiveRecord {
         $resultado->free();
         return (int) $fila['total'];
     }
+
+    public static function contarVigentesByEmpresa(int $id_empresa): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla . "
+                  WHERE id_empresa = $id_empresa
+                  AND fecha_vencimiento >= CURDATE()";
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
 }

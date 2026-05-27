@@ -306,4 +306,44 @@ class Equipo extends ActiveRecord {
         $resultado->free();
         return $datos;
     }
+
+    public static function contarWhere2(string $col1, string $val1, string $col2, $val2): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla . "
+                  WHERE $col1 = '" . self::$db->escape_string($val1) . "'
+                  AND   $col2 = '" . self::$db->escape_string($val2) . "'";
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
+
+    public static function contarPorTipoEmpresa(int $id_empresa): array {
+        $query = "SELECT tipo_equipo, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  WHERE id_empresa = $id_empresa
+                  GROUP BY tipo_equipo
+                  ORDER BY total DESC";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['tipo_equipo']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function contarPorEstatusEmpresa(int $id_empresa): array {
+        $query = "SELECT estatus, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  WHERE id_empresa = $id_empresa
+                  GROUP BY estatus
+                  ORDER BY FIELD(estatus,'Excelente','Bueno','Regular','Dañado','Baja')";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['estatus']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
 }

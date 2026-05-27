@@ -352,4 +352,89 @@ class Ticket extends ActiveRecord {
         $resultado->free();
         return $datos;
     }
+
+    public static function contarWhere2(string $col1, string $val1, string $col2, $val2): int {
+        $query = "SELECT COUNT(*) as total FROM " . static::$tabla . "
+                  WHERE $col1 = '" . self::$db->escape_string($val1) . "'
+                  AND   $col2 = '" . self::$db->escape_string($val2) . "'";
+        $resultado = self::$db->query($query);
+        $fila = $resultado->fetch_assoc();
+        $resultado->free();
+        return (int) $fila['total'];
+    }
+
+    public static function contarPorEstatusEmpresa(int $id_empresa): array {
+        $query = "SELECT estatus, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  WHERE id_empresa = $id_empresa
+                  GROUP BY estatus";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['estatus']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function contarPorPrioridadEmpresa(int $id_empresa): array {
+        $query = "SELECT prioridad, COUNT(*) as total
+                  FROM " . static::$tabla . "
+                  WHERE id_empresa = $id_empresa
+                  GROUP BY prioridad
+                  ORDER BY FIELD(prioridad, 'Baja', 'Media', 'Alta', 'Crítica')";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[$fila['prioridad']] = (int) $fila['total'];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function porUltimosMesesEmpresa(int $meses, int $id_empresa): array {
+        $query = "SELECT
+                    DATE_FORMAT(fecha_inicio, '%b') AS mes,
+                    DATE_FORMAT(fecha_inicio, '%Y-%m') AS mes_orden,
+                    SUM(CASE WHEN estatus IN ('Abierto','En Proceso') THEN 1 ELSE 0 END) AS abiertos,
+                    SUM(CASE WHEN estatus IN ('Cerrado','Cancelado')  THEN 1 ELSE 0 END) AS cerrados
+                  FROM " . static::$tabla . "
+                  WHERE fecha_inicio >= DATE_SUB(NOW(), INTERVAL $meses MONTH)
+                  AND id_empresa = $id_empresa
+                  GROUP BY mes_orden, mes
+                  ORDER BY mes_orden ASC";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $datos[] = [
+                'mes'      => $fila['mes'],
+                'abiertos' => (int) $fila['abiertos'],
+                'cerrados' => (int) $fila['cerrados'],
+            ];
+        }
+        $resultado->free();
+        return $datos;
+    }
+
+    public static function recientesSinAsignarEmpresa(int $limite, int $id_empresa): array {
+        $query = "SELECT
+                    t.id, t.numero_ticket, t.prioridad, t.estatus, t.fecha_inicio,
+                    e.nombre_fiscal AS nombre_empresa
+                  FROM ticket t
+                  LEFT JOIN empresa e ON t.id_empresa = e.id
+                  WHERE t.id_trabajador IS NULL
+                    AND t.estatus = 'Abierto'
+                    AND t.id_empresa = $id_empresa
+                  ORDER BY FIELD(t.prioridad,'Crítica','Alta','Media','Baja'), t.fecha_inicio ASC
+                  LIMIT $limite";
+        $resultado = self::$db->query($query);
+        $datos = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $obj = new static;
+            foreach ($fila as $key => $value) { $obj->$key = $value; }
+            $datos[] = $obj;
+        }
+        $resultado->free();
+        return $datos;
+    }
 }
