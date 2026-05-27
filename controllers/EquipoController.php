@@ -37,6 +37,7 @@ class EquipoController {
         session_start();
         isAuth();
         $alertas = [];
+        $empresaCliente = null;
         $tipoUsuario = $_SESSION['rol'];
         rol(['Administrador','Cliente']);
         $equipo = new Equipo();
