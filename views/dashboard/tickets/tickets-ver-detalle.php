@@ -92,11 +92,13 @@
             </button>
 
             <?php if($rol === 'Técnico'): ?>
-                <div class="btn-azul btn-agregar">
-                    <button id="btn-tomar-ticket" data-id="<?php echo $ticket->id; ?>">
-                        Tomar Ticket
-                    </button>
-                </div>
+                <?php if(empty($ticket->fecha_final)): ?>
+                    <div class="btn-azul btn-agregar">
+                        <button id="btn-tomar-ticket" data-id="<?php echo $ticket->id; ?>">
+                            Tomar Ticket
+                        </button>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
 

@@ -372,34 +372,34 @@ class TicketController {
             $resultado = $ticket->tomarTicketCustom($_SESSION['id']);
 
             if ($resultado) {
-                $ticketSeguimiento->id_ticket = $ticket->id;
+                $ticketSeguimiento->id_ticket    = $ticket->id;
                 $ticketSeguimiento->id_trabajador = $_SESSION['id'];
-                $ticketSeguimiento->id_cliente = $ticket->id_cliente;
-                $ticketSeguimiento->atiende = $_SESSION['nombre'];
-                $ticketSeguimiento->descripcion = "El Técnico " . $_SESSION['nombre'] . " ha tomado el ticket.";
-                $ticketSeguimiento->estatus = $ticket->estatus;
-                $ticketSeguimiento->fecha = date('Y-m-d H:i:s');
+                $ticketSeguimiento->id_cliente   = $ticket->id_cliente;
+                $ticketSeguimiento->atiende      = $_SESSION['nombre'];
+                $ticketSeguimiento->descripcion  = "El Técnico " . $_SESSION['nombre'] . " ha tomado el ticket.";
+                $ticketSeguimiento->estatus      = $ticket->estatus;
+                $ticketSeguimiento->fecha        = date('Y-m-d H:i:s');
                 
                 $resultadoSeguimiento = $ticketSeguimiento->guardar();
                 
                 if ($resultadoSeguimiento) {
                     $_SESSION['sweetalert'] = [
-                        'titulo' => 'Ticket Aceptado',
+                        'titulo'  => 'Ticket Aceptado',
                         'mensaje' => 'Has tomado este Ticket exitosamente.',
-                        'icono' => 'success'
+                        'icono'   => 'success'
                     ];
                 } else {
                     $_SESSION['sweetalert'] = [
-                        'titulo' => 'Aviso',
+                        'titulo'  => 'Aviso',
                         'mensaje' => 'Se tomó el ticket, pero hubo un detalle al crear el historial.',
-                        'icono' => 'warning'
+                        'icono'   => 'warning'
                     ];
                 }
             } else {
                 $_SESSION['sweetalert'] = [
-                    'titulo' => 'Error',
+                    'titulo'  => 'Error',
                     'mensaje' => 'No se pudo asignar el ticket, inténtalo más tarde.',
-                    'icono' => 'error'
+                    'icono'   => 'error'
                 ];
                 header('Location: /tickets');
                 exit;
@@ -414,9 +414,9 @@ class TicketController {
         // =========================================================================
         if ($ticket->id_trabajador !== $_SESSION['id']) {
             $_SESSION['sweetalert'] = [
-                'titulo' => 'Ticket No Disponible',
+                'titulo'  => 'Ticket No Disponible',
                 'mensaje' => 'Este ticket ya se encuentra asignado a otro técnico.',
-                'icono' => 'error'
+                'icono'   => 'error'
             ];
             header('Location: /tickets');
             exit;
@@ -425,19 +425,67 @@ class TicketController {
         // =========================================================================
         // CASO 3: TÚ ERES EL TÉCNICO ASIGNADO (Carga normal de la vista)
         // =========================================================================
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            debuguear("entra");
-            $descriocion = s($_POST['descripcion']);
-            $estatus = s($_POST['estatus']);
+            $descripcion = s($_POST['descripcion'] ?? '');
+            $estatus     = s($_POST['estatus'] ?? '');
 
-            debuguear($descriocion);
+            if (empty($descripcion)) {
+                $alertas['error'][] = 'La descripción es obligatoria.';
+            }
+            if (empty($estatus)) {
+                $alertas['error'][] = 'Debes seleccionar un estatus.';
+            }
+
+            if (empty($alertas['error'])) {
+
+                // ✅ Usamos el método específico que maneja fecha_final correctamente
+                $resultadoTicket = $ticket->actualizarSeguimientoTecnico($estatus);
+
+                // Crear registro de seguimiento
+                $ticketSeguimiento->id_ticket     = $ticket->id;
+                $ticketSeguimiento->id_trabajador = $_SESSION['id'];
+                $ticketSeguimiento->id_cliente    = $ticket->id_cliente;
+                $ticketSeguimiento->atiende       = $_SESSION['nombre'];
+                $ticketSeguimiento->descripcion   = $descripcion;
+                $ticketSeguimiento->estatus       = $estatus;
+                $ticketSeguimiento->fecha         = date('Y-m-d H:i:s');
+
+                $resultadoSeguimiento = $ticketSeguimiento->guardar();
+
+                if ($resultadoTicket && $resultadoSeguimiento) {
+                    if ($estatus === 'Cerrado') {
+                        $_SESSION['sweetalert'] = [
+                            'titulo'  => 'Ticket Cerrado',
+                            'mensaje' => 'El ticket ha sido cerrado exitosamente.',
+                            'icono'   => 'success'
+                        ];
+                        header('Location: /tickets');
+                        exit;
+                    }
+
+                    $_SESSION['sweetalert'] = [
+                        'titulo'  => 'Seguimiento Guardado',
+                        'mensaje' => 'El seguimiento se registró correctamente.',
+                        'icono'   => 'success'
+                    ];
+                } else {
+                    $_SESSION['sweetalert'] = [
+                        'titulo'  => 'Error',
+                        'mensaje' => 'No se pudo guardar el seguimiento, inténtalo de nuevo.',
+                        'icono'   => 'error'
+                    ];
+                }
+
+                // Redirigir para evitar reenvío del formulario (PRG pattern)
+                header("Location: /tickets/seguimiento?id=" . $ticket->id);
+                exit;
+            }
         }
 
         $router->render('dashboard/tickets/tickets-seguimiento', [
-            'titulo' => 'Tickets - Seguimiento de Técnico',
-            'alertas' => $alertas,
-            'ticket' => $ticket,
+            'titulo'            => 'Tickets - Seguimiento de Técnico',
+            'alertas'           => $alertas,
+            'ticket'            => $ticket,
             'ticket_seguimiento' => $ticketSeguimiento
         ]);
     }

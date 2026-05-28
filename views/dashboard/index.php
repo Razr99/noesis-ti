@@ -184,7 +184,7 @@
                             </td>
                             <td style="padding: 10px; color: #94a3b8;"><?php echo s($t->fecha_inicio); ?></td>
                             <td style="padding: 10px;">
-                                <a href="/tickets/ver?id=<?php echo $t->id; ?>" style="color: #38bdf8; text-decoration: none; font-size: 1.1rem;">Ver →</a>
+                                <a href="/tickets/detalle?id=<?php echo $t->id; ?>" style="color: #38bdf8; text-decoration: none; font-size: 1.1rem;">Ver →</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

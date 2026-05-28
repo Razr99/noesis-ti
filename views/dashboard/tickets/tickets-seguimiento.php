@@ -13,7 +13,7 @@
 
             <?php include_once __DIR__ . '/../../templates/alertas.php'; ?>
 
-            <form method="POST" action="/tickets/seguimiento" class="formulario-dashboard">       
+            <form method="POST" action="/tickets/seguimiento?id=<?php echo $ticket->id; ?>" class="formulario-dashboard">       
                 <div class="campo">
                     <label for="descripcion">Descripción</label>
                     <textarea

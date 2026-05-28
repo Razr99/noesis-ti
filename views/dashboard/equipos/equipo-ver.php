@@ -1,5 +1,12 @@
 <?php include_once __DIR__ . '/../header-dashboard.php'; ?>
 
+<?php
+function esImagenDefault($ruta) {
+    $defaults = ['desktop.png','laptop.png','camara.png','impresora.png','firewall.png','nvr.png','router.png','switch.png'];
+    return in_array($ruta, $defaults);
+}
+?>
+
 <div class="vista-detalle-layout">
     <h3>Inventario de Hardware</h3>
 
@@ -14,10 +21,26 @@
         <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin-bottom: 2rem;">
             
             <div style="flex: 1; min-width: 250px; max-width: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #1e293b; padding: 2rem; border-radius: 1rem; border: 1px solid #334155;">
-                <?php if(!empty($equipo->ruta_imagen)): ?>
-                    <img src="/build/img/equipos/<?php echo s($equipo->id_empresa); ?>/<?php echo s($equipo->ruta_imagen); ?>" alt="Foto del Equipo" style="max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 0.5rem;">
+                <?php if(!empty($equipo->ruta_imagen) && !esImagenDefault($equipo->ruta_imagen)): ?>
+                    <!-- Imagen subida por el usuario -->
+                    <img src="/build/img/equipos/<?php echo s($equipo->id_empresa); ?>/<?php echo s($equipo->ruta_imagen); ?>" 
+                        alt="Foto del Equipo" 
+                        style="max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 0.5rem;">
+
+                <?php elseif(!empty($equipo->ruta_imagen) && esImagenDefault($equipo->ruta_imagen)): ?>
+                    <!-- Imagen default guardada en BD -->
+                    <img src="/build/img/equipos/<?php echo s($equipo->ruta_imagen); ?>" 
+                        alt="<?php echo s($equipo->tipo_equipo); ?>"
+                        style="max-width: 100%; max-height: 200px; object-fit: contain;
+                            background-color: #ffffff;
+                            border-radius: 1rem;
+                            padding: 0.5rem;">
+
                 <?php else: ?>
-                    <img src="/build/img/equipos/default-hardware.png" alt="Imagen no disponible" style="max-width: 100%; max-height: 200px; object-fit: contain; opacity: 0.5;">
+                    <!-- Sin imagen -->
+                    <img src="/build/img/equipos/default.png" 
+                        alt="Sin imagen" 
+                        style="max-width: 100%; max-height: 200px; object-fit: contain; opacity: 0.5;">
                     <span style="color: #94a3b8; font-size: 1.1rem; margin-top: 1rem; font-style: italic;">Sin imagen cargada</span>
                 <?php endif; ?>
             </div>

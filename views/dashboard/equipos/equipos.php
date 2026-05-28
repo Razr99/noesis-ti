@@ -29,11 +29,13 @@
                     placeholder="Buscar por nombre, empresa, marca o modelo..."
                 >
             </div>
-            <div class="btn-azul btn-agregar">
-                <button onclick="window.location.href='/equipos/agregar'">
-                    <i class="fa-solid fa-plus"></i> Agregar Equipo
-                </button>
-            </div>
+            <?php if($rol === 'Cliente' || $rol === 'Administrador'): ?>
+                <div class="btn-azul btn-agregar">
+                    <button onclick="window.location.href='/equipos/agregar'">
+                        <i class="fa-solid fa-plus"></i> Agregar Equipo
+                    </button>
+                </div>
+            <?php endif; ?>
         </div>
 
         <div class="contenedor-tabla">
@@ -99,8 +101,12 @@
                                     $id_registro = $equipo->id;
                                     $nombre_registro = 'el equipo ' . $equipo->numero_serie;
                                     $url_ver = '/equipos/ver';
-                                    $url_editar = '/equipos/editar';
-                                    $url_eliminar = '/equipos/eliminar';
+                                    
+                                    if($rol === 'Administrador' || $rol === 'Cliente') {
+                                        $url_editar = '/equipos/editar';
+                                        $url_eliminar = '/equipos/eliminar';
+                                    }
+
                                     include __DIR__ . '/../../templates/dropdown-menu.php'; 
                                 ?>
                             </td>

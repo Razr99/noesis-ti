@@ -10,7 +10,7 @@ class ActiveRecord {
     // Alertas y Mensajes
     protected static $alertas = [];
     
-    // Definir la conexión a la BD - includes/database.php
+    // Definir la conexión a la BD
     public static function setDB($database) {
         self::$db = $database;
     }
@@ -18,7 +18,7 @@ class ActiveRecord {
     public static function setAlerta($tipo, $mensaje) {
         static::$alertas[$tipo][] = $mensaje;
     }
-    // Validación
+
     public static function getAlertas() {
         return static::$alertas;
     }
@@ -28,14 +28,11 @@ class ActiveRecord {
         return static::$alertas;
     }
 
-    // Registros - CRUD
     public function guardar() {
         $resultado = '';
         if(!is_null($this->id)) {
-            // actualizar
             $resultado = $this->actualizar();
         } else {
-            // Creando un nuevo registro
             $resultado = $this->crear();
         }
         return $resultado;
@@ -47,116 +44,101 @@ class ActiveRecord {
         return $resultado;
     }
 
-    // Busca un registro por su id
     public static function find($id) {
         $query = "SELECT * FROM " . static::$tabla  ." WHERE id = $id";
         $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        return array_shift($resultado);
     }
 
-    // Obtener Registro
     public static function get($limite) {
         $query = "SELECT * FROM " . static::$tabla . " LIMIT $limite";
         $resultado = self::consultarSQL($query);
-        return array_shift( $resultado ) ;
+        return array_shift($resultado);
     }
 
-    // Busqueda Where con Columna 
     public static function where($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultarSQL($query);
-        return array_shift( $resultado );
+        return array_shift($resultado);
     }
 
-    // SQL para Consultas Avanzadas.
     public static function SQL($consulta) {
         $query = $consulta;
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
 
-    // crea un nuevo registro
     public function crear() {
-        // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
-        // --- CAMBIO AQUÍ: Procesamos los valores antes del join para respetar los NULLs ---
         $valoresFormateados = [];
         foreach ($atributos as $value) {
             if ($value === null) {
-                $valoresFormateados[] = "NULL"; // Sin comillas para SQL
+                $valoresFormateados[] = "NULL";
             } else {
-                $valoresFormateados[] = "'{$value}'"; // Con comillas para strings/números
+                $valoresFormateados[] = "'{$value}'";
             }
         }
-        // ---------------------------------------------------------------------------------
 
-        // Insertar en la base de datos
         $query = " INSERT INTO " . static::$tabla . " ( ";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES ( "; // Quitamos la comilla fija inicial "'"
-        $query .= join(", ", $valoresFormateados); // Unimos los valores ya preparados con comillas individuales personalizadas
-        $query .= ")"; // Quitamos la comilla fija final "'"
+        $query .= " ) VALUES ( ";
+        $query .= join(", ", $valoresFormateados);
+        $query .= ")";
 
-        // Resultado de la consulta
         $resultado = self::$db->query($query);
 
         return [
-        'resultado' =>  $resultado,
-        'id' => self::$db->insert_id
+            'resultado' => $resultado,
+            'id' => self::$db->insert_id
         ];
     }
 
+    // ✅ CORREGIDO: ahora respeta NULL en lugar de convertirlo a ''
     public function actualizar() {
-        // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
-        // Iterar para ir agregando cada campo de la BD
         $valores = [];
         foreach($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+            if($value === null) {
+                $valores[] = "{$key} = NULL";
+            } else {
+                $valores[] = "{$key} = '{$value}'";
+            }
         }
 
-        $query = "UPDATE " . static::$tabla ." SET ";
-        $query .=  join(', ', $valores );
-        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
-        $query .= " LIMIT 1 "; 
-
-        // debuguear($query);
+        $query = "UPDATE " . static::$tabla . " SET ";
+        $query .= join(', ', $valores);
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
+        $query .= " LIMIT 1";
 
         $resultado = self::$db->query($query);
         return $resultado;
     }
 
-    // Eliminar un registro - Toma el ID de Active Record
     public function eliminar() {
-        $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
         $resultado = self::$db->query($query);
         return $resultado;
     }
 
     public static function consultarSQL($query) {
-        // Consultar la base de datos
         $resultado = self::$db->query($query);
 
-        // Iterar los resultados
         $array = [];
         while($registro = $resultado->fetch_assoc()) {
             $array[] = static::crearObjeto($registro);
         }
 
-        // liberar la memoria
         $resultado->free();
-
-        // retornar los resultados
         return $array;
     }
 
     protected static function crearObjeto($registro) {
         $objeto = new static;
 
-        foreach($registro as $key => $value ) {
-            if(property_exists( $objeto, $key  )) {
+        foreach($registro as $key => $value) {
+            if(property_exists($objeto, $key)) {
                 $objeto->$key = $value;
             }
         }
@@ -164,9 +146,6 @@ class ActiveRecord {
         return $objeto;
     }
 
-
-
-    // Identificar y unir los atributos de la BD
     public function atributos() {
         $atributos = [];
         foreach(static::$columnasDB as $columna) {
@@ -179,7 +158,7 @@ class ActiveRecord {
     public function sanitizarAtributos() {
         $atributos = $this->atributos();
         $sanitizado = [];
-        foreach($atributos as $key => $value ) {
+        foreach($atributos as $key => $value) {
             $sanitizado[$key] = $value === null ? null : self::$db->escape_string($value);
         }
         return $sanitizado;
@@ -187,9 +166,9 @@ class ActiveRecord {
 
     public function sincronizar($args=[]) { 
         foreach($args as $key => $value) {
-          if(property_exists($this, $key) && !is_null($value)) {
-            $this->$key = $value;
-          }
+            if(property_exists($this, $key) && !is_null($value)) {
+                $this->$key = $value;
+            }
         }
     }
 
@@ -199,25 +178,21 @@ class ActiveRecord {
     }
 
     public static function contarWhere($columna, $valor) {
-        // Agregamos el espacio correcto y sanitizamos el valor por seguridad
         $query = "SELECT COUNT(*) as total FROM " . static::$tabla . " WHERE $columna = '" . self::$db->escape_string($valor) . "'";
         
         $resultado = self::$db->query($query);
         if($resultado) {
             $fila = $resultado->fetch_assoc();
-            return (int) $fila['total']; // Devolvemos el número entero directamente
+            return (int) $fila['total'];
         }
         return 0;
     }
 
     public function tomarTicketCustom($id_tecnico) {
-        // 1. Preparamos los datos locales para el objeto por si se usan después de guardar
         $this->id_trabajador = $id_tecnico;
         $this->fecha_actualizacion = date('Y-m-d H:i:s');
         $this->estatus = 'En Proceso';
 
-        // 2. Ejecutamos una consulta SQL directa a la base de datos
-        // Usamos self::$db que es la conexión de MySQLi heredada de ActiveRecord
         $query = "UPDATE ticket SET ";
         $query .= " id_trabajador = '" . self::$db->escape_string($this->id_trabajador) . "', ";
         $query .= " fecha_actualizacion = '" . self::$db->escape_string($this->fecha_actualizacion) . "', ";
@@ -225,7 +200,30 @@ class ActiveRecord {
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
         $query .= " LIMIT 1";
 
-        // 3. Ejecutar la sentencia
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }
+
+    // ✅ NUEVO: Actualiza estatus y fecha_final correctamente según si se cierra o no
+    public function actualizarSeguimientoTecnico($estatus) {
+        $this->estatus = $estatus;
+        $this->fecha_actualizacion = date('Y-m-d H:i:s');
+
+        if ($estatus === 'Cerrado') {
+            $this->fecha_final = date('Y-m-d H:i:s');
+            $fecha_final_sql = "'" . self::$db->escape_string($this->fecha_final) . "'";
+        } else {
+            $this->fecha_final = null;
+            $fecha_final_sql = "NULL";
+        }
+
+        $query = "UPDATE " . static::$tabla . " SET ";
+        $query .= " estatus = '" . self::$db->escape_string($this->estatus) . "', ";
+        $query .= " fecha_actualizacion = '" . self::$db->escape_string($this->fecha_actualizacion) . "', ";
+        $query .= " fecha_final = " . $fecha_final_sql;
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
+        $query .= " LIMIT 1";
+
         $resultado = self::$db->query($query);
         return $resultado;
     }

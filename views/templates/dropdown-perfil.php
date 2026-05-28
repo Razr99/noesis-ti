@@ -15,15 +15,15 @@
     <div class="dropdown__menu">
         <p class="dropdown__correo"><?php echo $_SESSION['correo']; ?></p>
 
-        <a href="/perfil" class="dropdown__item">
+        <a href="/" class="dropdown__item">
             <i class="fa-solid fa-user"></i> Mi Perfil
         </a>
 
-        <a href="/configuracion" class="dropdown__item">
+        <a href="/" class="dropdown__item">
             <i class="fa-solid fa-gear"></i> Configuración
         </a>
 
-        <a href="/soporte" class="dropdown__item">
+        <a href="/" class="dropdown__item">
             <i class="fa-solid fa-circle-info"></i> Soporte
         </a>
 
